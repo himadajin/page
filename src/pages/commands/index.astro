@@ -1,0 +1,22 @@
+---
+import { getEntry, render } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+
+const indexEntry = await getEntry("commands", "index");
+if (!indexEntry) throw new Error("index entry not found");
+const { Content } = await render(indexEntry);
+---
+
+<Layout>
+  <Header />
+  <Breadcrumb />
+  <main id="main-content" data-layout="commands" class="app-layout">
+    <section id="wiki-content" class="app-prose max-w-none pt-8 pb-6">
+      <Content />
+    </section>
+  </main>
+  <Footer />
+</Layout>

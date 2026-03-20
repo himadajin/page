@@ -7,10 +7,10 @@ interface GroupFunction<T> {
 }
 
 const getPostsByGroupCondition = (
-  posts: CollectionEntry<"blog">[],
-  groupFunction: GroupFunction<CollectionEntry<"blog">>
+  posts: CollectionEntry<"commands">[],
+  groupFunction: GroupFunction<CollectionEntry<"commands">>
 ) => {
-  const result: Record<GroupKey, CollectionEntry<"blog">[]> = {};
+  const result: Record<GroupKey, CollectionEntry<"commands">[]> = {};
   for (let i = 0; i < posts.length; i++) {
     const item = posts[i];
     const groupKey = groupFunction(item, i);
