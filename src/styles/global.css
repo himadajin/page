@@ -1,10 +1,7 @@
 @import "tailwindcss";
 @import "./typography.css";
 
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
-
-:root,
-html[data-theme="light"] {
+:root {
   --background: #fdfdfd;
   --foreground: #282728;
   --accent: #006cac;
@@ -12,19 +9,11 @@ html[data-theme="light"] {
   --border: #ece9e9;
 }
 
-html[data-theme="dark"] {
-  --background: #212737;
-  --foreground: #eaedf3;
-  --accent: #ff6b01;
-  --muted: #343f60;
-  --border: #ab4b08;
-}
-
 @theme inline {
-  --font-google-sans-code:
-    "SFMono-Regular", SFMono-Regular, Consolas, "Liberation Mono", Menlo,
-    monospace;
-  --font-app: var(--font-google-sans-code);
+  --font-sans:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-app: var(--font-sans);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
