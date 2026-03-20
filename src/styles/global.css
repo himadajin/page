@@ -21,6 +21,9 @@ html[data-theme="dark"] {
 }
 
 @theme inline {
+  --font-google-sans-code:
+    "SFMono-Regular", SFMono-Regular, Consolas, "Liberation Mono", Menlo,
+    monospace;
   --font-app: var(--font-google-sans-code);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
