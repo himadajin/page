@@ -5,7 +5,6 @@ export const SITE = {
   desc: "技術資料とか、メモ書きとか",
   title: "page",
   ogImage: "astropaper-og.jpg",
-  lightAndDarkMode: true,
   postPerIndex: 10,
   postPerPage: 20,
   scheduledPostMargin: 15 * 60 * 1000, // 15 minutes
