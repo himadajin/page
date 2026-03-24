@@ -13,11 +13,21 @@ description: git のコマンドラインオプションについて
 git fetch
 # 特定のタグにチェックアウトする
 git checkout llvmorg-21.1.7
-# 変更を一時的に退避する
-git stash
 # origin/main の位置でローカルに main ブランチを作成して移動する
 git checkout -B main origin/main
+# 変更を一時的に退避する
+git stash
+# リモートのブランチを削除する
+git push origin --delete {branch_name}
+# 現在のブランチに origin/main を取り込む
+git pull origin main
+# 現在のブランチを origin/main にリセットする
+git reset --hard origin/main
+# 1つ前のコミットを取り消す
+git reset --soft HEAD~1
 ```
+
+`git switch`
 
 ```bash
 # リモートのブランチをローカルに作成して移動する
@@ -27,22 +37,17 @@ git switch --track origin/{branch_name}
 git switch -c {branch_name}
 ```
 
+`git branch`
+
 ```bash
 # ローカルのブランチを削除する
 # ブランチにマージされていない変更がある場合はエラーになる
 git branch -d {branch_name}
 # ローカルのブランチを強制的に削除する
 git branch -D {branch_name}
-# リモートのブランチを削除する
-git push origin --delete {branch_name}
 ```
 
-```bash
-# 現在のブランチに origin/main を取り込む
-git pull origin main
-# 現在のブランチを origin/main にリセットする
-git reset --hard origin/main
-```
+`git config`
 
 ```bash
 # 全ての設定を表示する
