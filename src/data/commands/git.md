@@ -47,6 +47,21 @@ git branch -d {branch_name}
 git branch -D {branch_name}
 ```
 
+`git worktree`
+
+```bash
+# ワークツリーの一覧を表示する
+git worktree list
+# ワークツリーを追加する
+git worktree add {path} {existing_branch}
+# 新しいブランチを作成してワークツリーを追加する
+git worktree add {path} -b {new_branch}
+# ワークツリーを削除する
+git worktree remove {path}
+# 手動で削除したワークツリーの管理ファイルを削除する
+git worktree prune
+```
+
 `git config`
 
 ```bash
