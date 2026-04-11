@@ -12,7 +12,7 @@
     h5,
     h6,
     th {
-      @apply mb-3 text-foreground not-italic font-semibold leading-tight;
+      @apply mb-3 leading-tight font-semibold text-foreground not-italic;
     }
 
     h1 {
@@ -97,7 +97,7 @@
     }
 
     blockquote {
-      @apply border-s-accent/80 wrap-break-word opacity-80 not-italic;
+      @apply border-s-accent/80 wrap-break-word not-italic opacity-80;
     }
 
     details {
