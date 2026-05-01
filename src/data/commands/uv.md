@@ -17,3 +17,12 @@ uv python list --only-installed
 # Pythonをインストールする
 uv python install 3.14
 ```
+
+```bash
+# カレントディレクトリにプロジェクトを作成する
+uv init
+# 新規プロジェクトを作成する
+uv init {project-name}
+# Pythonのバージョンを指定してプロジェクトを作成する
+uv init {project-name} --python 3.12
+```
