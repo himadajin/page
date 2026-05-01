@@ -16,6 +16,8 @@ uv python list
 uv python list --only-installed
 # Pythonをインストールする
 uv python install 3.14
+# 既存プロジェクトのPythonのバージョンを切り替える
+uv python pin 3.14
 ```
 
 ```bash
