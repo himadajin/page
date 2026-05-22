@@ -35,6 +35,7 @@ description: コマンドラインオプションのメモ
 ### ツールチェーンマネージャ
 
 - [rustup](/posts/rustup)
+- [uv](/posts/uv)
 - [nvm](/posts/nvm)
 - [npm](/posts/npm)
 
