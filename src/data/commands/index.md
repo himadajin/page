@@ -16,6 +16,7 @@ description: コマンドラインオプションのメモ
 ### コンパイラ
 
 - [clang](/posts/clang)
+- [go](/posts/go)
 - [opt](/posts/opt)
 - [rustc](/posts/rustc)
 - [tsc](/posts/tsc)
