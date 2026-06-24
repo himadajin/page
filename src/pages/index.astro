@@ -2,7 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import { SITE } from "@/config";
+import { SECTIONS, SITE } from "@/config";
 ---
 
 <Layout>
@@ -13,21 +13,15 @@ import { SITE } from "@/config";
       <p>{SITE.desc}</p>
       <h2>Contents</h2>
       <ul>
-        <li>
-          <a href="/commands">Commands</a>
-        </li>
+        {
+          SECTIONS.map(section => (
+            <li>
+              <a href={section.path}>{section.label}</a>
+            </li>
+          ))
+        }
       </ul>
     </section>
   </main>
   <Footer />
 </Layout>
-
-<script>
-  document.addEventListener("astro:page-load", () => {
-    const indexLayout = (document.querySelector("#main-content") as HTMLElement)
-      ?.dataset?.layout;
-    if (indexLayout) {
-      sessionStorage.setItem("backUrl", "/");
-    }
-  });
-</script>

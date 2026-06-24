@@ -1,0 +1,29 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import ReferenceDetails from "@/layouts/ReferenceDetails.astro";
+import {
+  getReferencePath,
+  isIndexEntry,
+  toReferenceItem,
+} from "@/utils/references";
+
+type Props = {
+  entry: CollectionEntry<"cmds">;
+};
+
+export async function getStaticPaths() {
+  const entries = await getCollection("cmds");
+
+  return entries
+    .filter(entry => !isIndexEntry(entry))
+    .map(entry => ({
+      params: { slug: getReferencePath("cmds", entry.id, false) },
+      props: { entry },
+    }));
+}
+
+const { entry } = Astro.props;
+const item = toReferenceItem("cmds", entry);
+---
+
+<ReferenceDetails {...item} />
