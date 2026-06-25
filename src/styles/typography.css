@@ -126,6 +126,13 @@
     @apply m-0 rounded-none border-0;
   }
 
+  .code-block-wrapper[data-language="md"] .astro-code,
+  .code-block-wrapper[data-language="markdown"] .astro-code,
+  .code-block-wrapper .astro-code[data-language="md"],
+  .code-block-wrapper .astro-code[data-language="markdown"] {
+    font-family: var(--font-app);
+  }
+
   .code-block-header {
     @apply flex min-h-7 items-center justify-between gap-3 border-b border-border bg-muted/45 px-3 py-0.5;
   }

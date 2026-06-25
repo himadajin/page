@@ -68,6 +68,7 @@ export const transformerCodeBlock = () => ({
       tagName: "div",
       properties: {
         class: "code-block-wrapper",
+        "data-language": language ?? "",
       },
       children: [
         {
