@@ -9,6 +9,7 @@ description: コマンドラインオプションのメモ
 ### コンパイラ
 
 - [clang](/cmds/clang)
+- [go](/cmds/go)
 - [opt](/cmds/opt)
 - [rustc](/cmds/rustc)
 - [tsc](/cmds/tsc)
