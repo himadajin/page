@@ -131,8 +131,6 @@
   .code-block-wrapper .astro-code[data-language="md"],
   .code-block-wrapper .astro-code[data-language="markdown"] {
     font-family: var(--font-app);
-    font-size: 0.9375rem;
-    line-height: 1.8;
   }
 
   .code-block-header {
