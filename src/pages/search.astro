@@ -5,14 +5,12 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import { SITE } from "@/config";
-
-const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
 ---
 
 <Layout title={`Search | ${SITE.title}`}>
   <Header />
-  <Main pageTitle="Search" pageDesc="Search any article ...">
-    <div id="pagefind-search" transition:persist data-backurl={backUrl}></div>
+  <Main pageTitle="Search" pageDesc="資料を検索">
+    <div id="pagefind-search" transition:persist></div>
   </Main>
   <Footer />
 </Layout>
@@ -37,7 +35,7 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
         pageFindSearch.innerHTML = `
             <div class="bg-muted/75 rounded p-4 space-y-4 mb-4">
               <p><strong>DEV mode Warning! </strong>You need to build the project at least once to see the search results during development.</p>
-              <code class="block bg-black text-white px-2 py-1 rounded">pnpm run build</code>
+              <code class="block bg-black text-white px-2 py-1 rounded">npm run build</code>
             </div>
           `;
       }
@@ -50,9 +48,6 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
         processTerm: function (term: string) {
           params.set("q", term); // Update the `q` parameter in the URL
           history.replaceState(history.state, "", "?" + params.toString()); // Push the new URL without reloading
-
-          const backUrl = pageFindSearch?.dataset?.backurl;
-          sessionStorage.setItem("backUrl", backUrl + "?" + params.toString());
 
           return term;
         },

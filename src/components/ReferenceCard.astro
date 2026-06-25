@@ -1,0 +1,31 @@
+---
+import { slugifyStr } from "@/utils/slugify";
+import type { ReferenceItem } from "@/utils/references";
+
+type Props = {
+  variant?: "h2" | "h3";
+} & ReferenceItem;
+
+const { variant: Heading = "h2", entry, href, section } = Astro.props;
+
+const { title, description } = entry.data;
+---
+
+<li class="my-6">
+  <a
+    href={href}
+    class:list={[
+      "inline-block text-lg font-medium text-accent",
+      "decoration-dashed underline-offset-4 hover:underline",
+      "focus-visible:no-underline focus-visible:underline-offset-0",
+    ]}
+  >
+    <Heading
+      style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
+    >
+      {title}
+    </Heading>
+  </a>
+  <div class="mt-1 text-sm text-foreground/70">{section.label}</div>
+  {description && <p>{description}</p>}
+</li>

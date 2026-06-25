@@ -1,0 +1,28 @@
+---
+import { getEntry, render } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import CodeBlockCopy from "@/components/CodeBlockCopy.astro";
+import { SITE } from "@/config";
+
+const indexEntry = await getEntry("prompts", "index");
+if (!indexEntry) throw new Error("prompts index entry not found");
+const { Content } = await render(indexEntry);
+---
+
+<Layout
+  title={`${indexEntry.data.title} | ${SITE.title}`}
+  description={indexEntry.data.description}
+>
+  <Header />
+  <Breadcrumb />
+  <main id="main-content" data-layout="prompts" class="app-layout">
+    <section id="wiki-content" class="app-prose max-w-none pt-8 pb-6">
+      <Content />
+    </section>
+  </main>
+  <CodeBlockCopy />
+  <Footer />
+</Layout>
