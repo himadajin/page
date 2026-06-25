@@ -3,21 +3,6 @@
   const checkIcon = `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><path d="M20 6 9 17l-5-5"></path></svg>`;
   const failedIcon = `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>`;
 
-  const languageLabels = {
-    bash: "Bash",
-    dockerfile: "Dockerfile",
-    makefile: "Makefile",
-    md: "Markdown",
-    shell: "Shell",
-    typescript: "TypeScript",
-  };
-
-  function getLanguageLabel(codeBlock) {
-    const language = codeBlock.dataset.language;
-    if (!language) return "Code";
-    return languageLabels[language] ?? language;
-  }
-
   function setCopyButtonIcon(button, icon, label) {
     button.innerHTML = icon;
     button.ariaLabel = label;
@@ -78,42 +63,27 @@
     }
   }
 
-  function attachCopyButtons() {
-    const codeBlocks = Array.from(document.querySelectorAll(".app-prose pre"));
+  function attachCopyButtonHandlers() {
+    const copyButtons = Array.from(document.querySelectorAll(".copy-code"));
 
-    for (const codeBlock of codeBlocks) {
-      if (codeBlock.parentElement?.classList.contains("code-block-wrapper")) {
+    for (const copyButton of copyButtons) {
+      if (copyButton.dataset.initialized === "true") {
         continue;
       }
 
-      const wrapper = document.createElement("div");
-      wrapper.className = "code-block-wrapper";
-
-      const header = document.createElement("div");
-      header.className = "code-block-header";
-
-      const languageLabel = document.createElement("span");
-      languageLabel.className = "code-block-language";
-      languageLabel.innerText = getLanguageLabel(codeBlock);
-
-      const copyButton = document.createElement("button");
-      copyButton.type = "button";
-      copyButton.dataset.state = "idle";
-      copyButton.className = "copy-code";
+      copyButton.dataset.initialized = "true";
       setCopyButtonIcon(copyButton, copyIcon, "Copy code");
 
-      codeBlock.setAttribute("tabindex", "0");
-      codeBlock.parentNode?.insertBefore(wrapper, codeBlock);
-      header.appendChild(languageLabel);
-      header.appendChild(copyButton);
-      wrapper.appendChild(header);
-      wrapper.appendChild(codeBlock);
-
       copyButton.addEventListener("click", async () => {
+        const codeBlock = copyButton
+          .closest(".code-block-wrapper")
+          ?.querySelector("pre");
+        if (!codeBlock) return;
+
         await copyCode(codeBlock, copyButton);
       });
     }
   }
 
-  attachCopyButtons();
+  attachCopyButtonHandlers();
 </script>
