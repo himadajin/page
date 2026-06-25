@@ -1,8 +1,5 @@
 ---
-author: himadajin
-pubDatetime: 2026-05-22T00:00:00Z
 title: go
-draft: false
 tags:
   - compiler
   - build-system
