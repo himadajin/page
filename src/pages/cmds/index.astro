@@ -4,6 +4,7 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
+import CodeBlockCopy from "@/components/CodeBlockCopy.astro";
 import { SITE } from "@/config";
 
 const indexEntry = await getEntry("cmds", "index");
@@ -22,5 +23,6 @@ const { Content } = await render(indexEntry);
       <Content />
     </section>
   </main>
+  <CodeBlockCopy />
   <Footer />
 </Layout>

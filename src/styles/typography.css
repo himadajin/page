@@ -118,6 +118,36 @@
     @apply flex border bg-(--shiki-light-bg) text-(--shiki-light) outline-border [&_span]:text-(--shiki-light);
   }
 
+  .code-block-wrapper {
+    @apply my-6 overflow-hidden rounded-md border border-border bg-background shadow-[0_1px_2px_rgba(40,39,40,0.035)];
+  }
+
+  .code-block-wrapper .astro-code {
+    @apply m-0 rounded-none border-0;
+  }
+
+  .code-block-header {
+    @apply flex min-h-9 items-center justify-between gap-3 border-b border-border bg-muted/45 px-3 py-1.5;
+  }
+
+  .code-block-language {
+    @apply truncate text-[0.6875rem] leading-4 font-medium tracking-normal text-foreground/55;
+  }
+
+  .copy-code {
+    @apply grid size-7 shrink-0 place-items-center rounded border border-border bg-background/80 text-foreground/60;
+    @apply hover:bg-muted hover:text-foreground;
+    @apply focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent focus-visible:outline-dashed;
+  }
+
+  .copy-code[data-state="copied"] {
+    @apply border-foreground/20 bg-muted text-foreground/75;
+  }
+
+  .copy-code[data-state="failed"] {
+    @apply border-foreground/30 bg-muted text-foreground;
+  }
+
   /* Styles for Shiki transformers */
   /* https://shiki.style/packages/transformers */
   .astro-code {

@@ -1,0 +1,119 @@
+<script is:inline data-astro-rerun>
+  const copyIcon = `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>`;
+  const checkIcon = `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M20 6 9 17l-5-5"></path></svg>`;
+  const failedIcon = `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>`;
+
+  const languageLabels = {
+    bash: "Bash",
+    dockerfile: "Dockerfile",
+    makefile: "Makefile",
+    md: "Markdown",
+    shell: "Shell",
+    typescript: "TypeScript",
+  };
+
+  function getLanguageLabel(codeBlock) {
+    const language = codeBlock.dataset.language;
+    if (!language) return "Code";
+    return languageLabels[language] ?? language;
+  }
+
+  function setCopyButtonIcon(button, icon, label) {
+    button.innerHTML = icon;
+    button.ariaLabel = label;
+    button.title = label;
+  }
+
+  function setCopyButtonState(button, state) {
+    if (state === "copied") {
+      button.dataset.state = "copied";
+      setCopyButtonIcon(button, checkIcon, "Copied");
+    } else if (state === "failed") {
+      button.dataset.state = "failed";
+      setCopyButtonIcon(button, failedIcon, "Copy failed");
+    }
+
+    window.setTimeout(() => {
+      button.dataset.state = "idle";
+      setCopyButtonIcon(button, copyIcon, "Copy code");
+    }, 900);
+  }
+
+  async function writeClipboardText(text) {
+    if (navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return;
+      } catch {
+        // Fall back to the legacy copy path below.
+      }
+    }
+
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.setAttribute("readonly", "");
+    textArea.style.position = "fixed";
+    textArea.style.inset = "0";
+    textArea.style.opacity = "0";
+
+    document.body.appendChild(textArea);
+    textArea.select();
+
+    try {
+      document.execCommand("copy");
+    } finally {
+      textArea.remove();
+    }
+  }
+
+  async function copyCode(block, button) {
+    const code = block.querySelector("code");
+    const text = code?.innerText ?? "";
+
+    try {
+      await writeClipboardText(text);
+      setCopyButtonState(button, "copied");
+    } catch {
+      setCopyButtonState(button, "failed");
+    }
+  }
+
+  function attachCopyButtons() {
+    const codeBlocks = Array.from(document.querySelectorAll(".app-prose pre"));
+
+    for (const codeBlock of codeBlocks) {
+      if (codeBlock.parentElement?.classList.contains("code-block-wrapper")) {
+        continue;
+      }
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "code-block-wrapper";
+
+      const header = document.createElement("div");
+      header.className = "code-block-header";
+
+      const languageLabel = document.createElement("span");
+      languageLabel.className = "code-block-language";
+      languageLabel.innerText = getLanguageLabel(codeBlock);
+
+      const copyButton = document.createElement("button");
+      copyButton.type = "button";
+      copyButton.dataset.state = "idle";
+      copyButton.className = "copy-code";
+      setCopyButtonIcon(copyButton, copyIcon, "Copy code");
+
+      codeBlock.setAttribute("tabindex", "0");
+      codeBlock.parentNode?.insertBefore(wrapper, codeBlock);
+      header.appendChild(languageLabel);
+      header.appendChild(copyButton);
+      wrapper.appendChild(header);
+      wrapper.appendChild(codeBlock);
+
+      copyButton.addEventListener("click", async () => {
+        await copyCode(codeBlock, copyButton);
+      });
+    }
+  }
+
+  attachCopyButtons();
+</script>
