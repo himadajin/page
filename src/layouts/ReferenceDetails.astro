@@ -7,6 +7,7 @@ import Tag from "@/components/Tag.astro";
 import EditLink from "@/components/EditLink.astro";
 import BackToTopButton from "@/components/BackToTopButton.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
+import CodeBlockCopy from "@/components/CodeBlockCopy.astro";
 import type { ReferenceItem } from "@/utils/references";
 import { slugifyStr } from "@/utils/slugify";
 import { SITE } from "@/config";
@@ -102,6 +103,7 @@ const layoutProps = {
 
     <BackToTopButton />
   </main>
+  <CodeBlockCopy />
   <Footer />
 </Layout>
 
@@ -157,49 +159,4 @@ const layoutProps = {
     }
   }
   addHeadingLinks();
-
-  function attachCopyButtons() {
-    const copyButtonLabel = "Copy";
-    const codeBlocks = Array.from(document.querySelectorAll("pre"));
-
-    for (const codeBlock of codeBlocks) {
-      const wrapper = document.createElement("div");
-      wrapper.style.position = "relative";
-
-      const computedStyle = getComputedStyle(codeBlock);
-      const hasFileNameOffset =
-        computedStyle.getPropertyValue("--file-name-offset").trim() !== "";
-
-      const topClass = hasFileNameOffset
-        ? "top-(--file-name-offset)"
-        : "-top-3";
-
-      const copyButton = document.createElement("button");
-      copyButton.className = `copy-code absolute end-3 ${topClass} rounded bg-muted border border-muted px-2 py-1 text-xs leading-4 text-foreground font-medium`;
-      copyButton.innerHTML = copyButtonLabel;
-      codeBlock.setAttribute("tabindex", "0");
-      codeBlock.appendChild(copyButton);
-
-      codeBlock?.parentNode?.insertBefore(wrapper, codeBlock);
-      wrapper.appendChild(codeBlock);
-
-      copyButton.addEventListener("click", async () => {
-        await copyCode(codeBlock, copyButton);
-      });
-    }
-  }
-  attachCopyButtons();
-
-  async function copyCode(block, button) {
-    const code = block.querySelector("code");
-    const text = code?.innerText;
-
-    await navigator.clipboard.writeText(text ?? "");
-
-    button.innerText = "Copied";
-
-    setTimeout(() => {
-      button.innerText = "Copy";
-    }, 700);
-  }
 </script>
