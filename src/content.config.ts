@@ -1,26 +1,30 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
-import { SITE } from "@/config";
+import { z } from "astro/zod";
+import { SECTIONS } from "@/config";
 
-export const COMMANDS_PATH = "src/data/commands";
-
-const commands = defineCollection({
-  loader: glob({ pattern: "**/[^_]*.md", base: `./${COMMANDS_PATH}` }),
+const cmds = defineCollection({
+  loader: glob({ pattern: "**/[^_]*.md", base: `./${SECTIONS[0].dataPath}` }),
   schema: ({ image }) =>
     z.object({
-      author: z.string().default(SITE.author),
-      pubDatetime: z.date(),
-      modDatetime: z.date().optional().nullable(),
       title: z.string(),
-      featured: z.boolean().optional(),
-      draft: z.boolean().optional(),
-      tags: z.array(z.string()).default(["others"]),
+      description: z.string().optional(),
+      tags: z.array(z.string()).default([]),
       ogImage: image().or(z.string()).optional(),
-      description: z.string(),
-      canonicalURL: z.string().optional(),
-      hideEditPost: z.boolean().optional(),
-      timezone: z.string().optional(),
+      hideEditLink: z.boolean().optional(),
     }),
 });
 
-export const collections = { commands };
+const prompts = defineCollection({
+  loader: glob({ pattern: "**/[^_]*.md", base: `./${SECTIONS[1].dataPath}` }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      description: z.string().optional(),
+      tags: z.array(z.string()).default([]),
+      ogImage: image().or(z.string()).optional(),
+      hideEditLink: z.boolean().optional(),
+    }),
+});
+
+export const collections = { cmds, prompts };
