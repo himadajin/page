@@ -49,5 +49,6 @@ description: コマンドラインオプションのメモ
 
 ### 仮想化
 
+- [container](/cmds/container)
 - [docker](/cmds/docker)
 - [wsl](/cmds/wsl)
