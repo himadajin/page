@@ -2,10 +2,10 @@
 
 ## Development Environment
 
-- Node.js: `24.13`
+- Node.js: `24.16`
 - npm: `11`
-- Astro: `7.0.2`
-- Wrangler: `4.104.0`
+- Astro: `7.0.3`
+- Wrangler: `4.105.0`
 
 ## Setup
 
@@ -53,6 +53,6 @@ npm run cf:deploy
 
 For Cloudflare's Git integration, use the same runtime and package manager:
 
-- Node.js version: `24.13.0` or another `24.x` release
+- Node.js version: `24.16.0` (also pinned in `.node-version`)
 - Install command: `npm ci`
 - Build command: `npm run build`
