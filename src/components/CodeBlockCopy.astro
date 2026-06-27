@@ -25,30 +25,11 @@
   }
 
   async function writeClipboardText(text) {
-    if (navigator.clipboard?.writeText) {
-      try {
-        await navigator.clipboard.writeText(text);
-        return;
-      } catch {
-        // Fall back to the legacy copy path below.
-      }
+    if (!window.isSecureContext || !navigator.clipboard?.writeText) {
+      throw new Error("Clipboard API is unavailable.");
     }
 
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    textArea.setAttribute("readonly", "");
-    textArea.style.position = "fixed";
-    textArea.style.inset = "0";
-    textArea.style.opacity = "0";
-
-    document.body.appendChild(textArea);
-    textArea.select();
-
-    try {
-      document.execCommand("copy");
-    } finally {
-      textArea.remove();
-    }
+    await navigator.clipboard.writeText(text);
   }
 
   async function copyCode(block, button) {
