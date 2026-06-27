@@ -1,5 +1,5 @@
 # Base stage for building the static files
-FROM node:24.13.0 AS base
+FROM node:24.16.0 AS base
 WORKDIR /app
 
 COPY package.json package-lock.json ./
