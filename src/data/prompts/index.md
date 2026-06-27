@@ -89,7 +89,7 @@ tags: []
 それでは、以下の私のメッセージに基づいて、私が取り上げる対象を理解する手伝いをしてください。
 ```
 
-###　decision-distillation
+### decision-distillation
 
 ```md
 # 目的
