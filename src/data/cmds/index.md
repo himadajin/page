@@ -35,6 +35,7 @@ description: コマンドラインオプションのメモ
 
 ### バージョン管理
 
+- [gh](/cmds/gh)
 - [git](/cmds/git)
 - [svn](/cmds/svn)
 
