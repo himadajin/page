@@ -31,6 +31,16 @@ npm run sync
 
 This project is configured for Cloudflare Workers static assets deployment.
 
+Deployments are normally handled by Cloudflare Workers Builds via Git integration.
+The Cloudflare project is configured with:
+
+- Build command: `npm run build`
+- Deploy command: `npx wrangler deploy`
+- Root directory: `/`
+- Production branch: `main`
+
+Use the following commands only for local preview or manual deployment.
+
 1. Authenticate once:
 
 ```bash
@@ -50,9 +60,3 @@ npm run cf:deploy
 ```
 
 `wrangler.jsonc` uses `assets.directory: "./dist"` and `not_found_handling: "404-page"` so Astro's `src/pages/404.astro` is served as the custom 404 page on Workers.
-
-For Cloudflare's Git integration, use the same runtime and package manager:
-
-- Node.js version: `24.16.0` (also pinned in `.node-version`)
-- Install command: `npm ci`
-- Build command: `npm run build`
