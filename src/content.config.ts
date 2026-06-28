@@ -11,7 +11,6 @@ const cmds = defineCollection({
       description: z.string().optional(),
       tags: z.array(z.string()).default([]),
       ogImage: image().or(z.string()).optional(),
-      hideEditLink: z.boolean().optional(),
     }),
 });
 
@@ -23,7 +22,6 @@ const prompts = defineCollection({
       description: z.string().optional(),
       tags: z.array(z.string()).default([]),
       ogImage: image().or(z.string()).optional(),
-      hideEditLink: z.boolean().optional(),
     }),
 });
 

@@ -4,7 +4,6 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Tag from "@/components/Tag.astro";
-import EditLink from "@/components/EditLink.astro";
 import PromptCopyButton from "@/components/PromptCopyButton.astro";
 import BackToTopButton from "@/components/BackToTopButton.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
@@ -17,13 +16,7 @@ type Props = ReferenceItem;
 
 const { entry, href, section } = Astro.props;
 
-const {
-  title,
-  description,
-  ogImage: initOgImage,
-  tags,
-  hideEditLink,
-} = entry.data;
+const { title, description, ogImage: initOgImage, tags } = entry.data;
 
 const { Content } = await render(entry);
 
@@ -72,18 +65,6 @@ const promptCopySourceId = `prompt-copy-source-${entry.id.replaceAll("/", "-")}`
       </a>
       <span aria-hidden="true">|</span>
       <PromptCopyButton text={entry.body ?? ""} sourceId={promptCopySourceId} />
-      <span
-        aria-hidden="true"
-        class:list={[
-          "max-sm:hidden",
-          { hidden: !SITE.editLink.enabled || hideEditLink },
-        ]}>|</span
-      >
-      <EditLink
-        filePath={entry.filePath}
-        {hideEditLink}
-        class="max-sm:hidden"
-      />
     </div>
     <article
       id="article"
@@ -93,8 +74,6 @@ const promptCopySourceId = `prompt-copy-source-${entry.id.replaceAll("/", "-")}`
     </article>
 
     <hr class="my-8 border-dashed" />
-
-    <EditLink class="sm:hidden" filePath={entry.filePath} {hideEditLink} />
 
     {
       tags.length > 0 && (
