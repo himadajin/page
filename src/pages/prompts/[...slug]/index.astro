@@ -1,6 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
-import ReferenceDetails from "@/layouts/ReferenceDetails.astro";
+import PromptDetails from "@/layouts/PromptDetails.astro";
 import {
   getReferencePath,
   isIndexEntry,
@@ -26,4 +26,4 @@ const { entry } = Astro.props;
 const item = toReferenceItem("prompts", entry);
 ---
 
-<ReferenceDetails {...item} />
+<PromptDetails {...item} />

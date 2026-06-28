@@ -1,0 +1,136 @@
+---
+type Props = {
+  class?: string;
+  sourceId: string;
+  text: string;
+};
+
+const { class: className = "", sourceId, text } = Astro.props;
+const serializedText = JSON.stringify(text).replaceAll("</", "<\\/");
+---
+
+<button
+  type="button"
+  class:list={[
+    "inline-flex items-center gap-1.5 text-sm text-foreground/70 hover:text-accent",
+    className,
+  ]}
+  data-prompt-copy-button
+  data-prompt-copy-source={sourceId}
+  data-state="idle"
+>
+  <svg
+    data-prompt-copy-icon="idle"
+    aria-hidden="true"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="size-3.5"
+  >
+    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+  </svg>
+  <svg
+    data-prompt-copy-icon="copied"
+    aria-hidden="true"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.25"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="hidden size-3.5"
+  >
+    <path d="M20 6 9 17l-5-5"></path>
+  </svg>
+  <svg
+    data-prompt-copy-icon="failed"
+    aria-hidden="true"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.25"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="hidden size-3.5"
+  >
+    <path d="M18 6 6 18"></path>
+    <path d="m6 6 12 12"></path>
+  </svg>
+  <span data-prompt-copy-label>Copy prompt</span>
+</button>
+<script
+  is:inline
+  type="application/json"
+  id={sourceId}
+  set:html={serializedText}
+/>
+
+<script is:inline data-astro-rerun>
+  function setPromptCopyButtonState(button, state) {
+    button.dataset.state = state;
+    const label = button.querySelector("[data-prompt-copy-label]");
+    const icons = button.querySelectorAll("[data-prompt-copy-icon]");
+
+    for (const icon of icons) {
+      icon.classList.toggle("hidden", icon.dataset.promptCopyIcon !== state);
+    }
+
+    if (state === "copied") {
+      label.textContent = "Copied";
+    } else if (state === "failed") {
+      label.textContent = "Copy failed";
+    } else {
+      label.textContent = "Copy prompt";
+    }
+  }
+
+  async function writePromptClipboardText(text) {
+    if (!window.isSecureContext || !navigator.clipboard?.writeText) {
+      throw new Error("Clipboard API is unavailable.");
+    }
+
+    await navigator.clipboard.writeText(text);
+  }
+
+  function getPromptCopyText(button) {
+    const sourceId = button.dataset.promptCopySource;
+    if (!sourceId) return "";
+
+    const source = document.getElementById(sourceId);
+    if (!source?.textContent) return "";
+
+    return JSON.parse(source.textContent);
+  }
+
+  function attachPromptCopyButtonHandlers() {
+    const buttons = Array.from(
+      document.querySelectorAll("[data-prompt-copy-button]")
+    );
+
+    for (const button of buttons) {
+      if (button.dataset.initialized === "true") {
+        continue;
+      }
+
+      button.dataset.initialized = "true";
+      button.addEventListener("click", async () => {
+        try {
+          await writePromptClipboardText(getPromptCopyText(button));
+          setPromptCopyButtonState(button, "copied");
+        } catch {
+          setPromptCopyButtonState(button, "failed");
+        }
+
+        window.setTimeout(() => {
+          setPromptCopyButtonState(button, "idle");
+        }, 900);
+      });
+    }
+  }
+
+  attachPromptCopyButtonHandlers();
+</script>

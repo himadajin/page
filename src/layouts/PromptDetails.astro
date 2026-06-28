@@ -1,0 +1,167 @@
+---
+import { render } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Tag from "@/components/Tag.astro";
+import EditLink from "@/components/EditLink.astro";
+import PromptCopyButton from "@/components/PromptCopyButton.astro";
+import BackToTopButton from "@/components/BackToTopButton.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import CodeBlockCopy from "@/components/CodeBlockCopy.astro";
+import type { ReferenceItem } from "@/utils/references";
+import { slugifyStr } from "@/utils/slugify";
+import { SITE } from "@/config";
+
+type Props = ReferenceItem;
+
+const { entry, href, section } = Astro.props;
+
+const {
+  title,
+  description,
+  ogImage: initOgImage,
+  tags,
+  hideEditLink,
+} = entry.data;
+
+const { Content } = await render(entry);
+
+let ogImageUrl: string | undefined;
+
+if (typeof initOgImage === "string") {
+  ogImageUrl = initOgImage;
+} else if (initOgImage?.src) {
+  ogImageUrl = initOgImage.src;
+}
+
+if (!ogImageUrl && SITE.dynamicOgImage) {
+  ogImageUrl = `${href}/index.png`;
+}
+
+const ogImage = ogImageUrl
+  ? new URL(ogImageUrl, Astro.url.origin).href
+  : undefined;
+
+const layoutProps = {
+  title: `${title} | ${SITE.title}`,
+  description,
+  ogImage,
+  scrollSmooth: true,
+};
+
+const promptCopySourceId = `prompt-copy-source-${entry.id.replaceAll("/", "-")}`;
+---
+
+<Layout {...layoutProps}>
+  <Header />
+  <Breadcrumb />
+  <main id="main-content" class="app-layout pb-12" data-pagefind-body>
+    <h1
+      transition:name={slugifyStr(title.replaceAll(".", "-"))}
+      class="inline-block text-2xl font-bold text-accent sm:text-3xl"
+    >
+      {title}
+    </h1>
+    <div class="my-2 flex flex-wrap items-center gap-x-2 gap-y-1">
+      <a
+        href={section.path}
+        class="text-sm text-foreground/70 hover:text-accent"
+      >
+        {section.label}
+      </a>
+      <span aria-hidden="true">|</span>
+      <PromptCopyButton text={entry.body ?? ""} sourceId={promptCopySourceId} />
+      <span
+        aria-hidden="true"
+        class:list={[
+          "max-sm:hidden",
+          { hidden: !SITE.editLink.enabled || hideEditLink },
+        ]}>|</span
+      >
+      <EditLink
+        filePath={entry.filePath}
+        {hideEditLink}
+        class="max-sm:hidden"
+      />
+    </div>
+    <article
+      id="article"
+      class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg)"
+    >
+      <Content />
+    </article>
+
+    <hr class="my-8 border-dashed" />
+
+    <EditLink class="sm:hidden" filePath={entry.filePath} {hideEditLink} />
+
+    {
+      tags.length > 0 && (
+        <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
+          {tags.map(tag => (
+            <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />
+          ))}
+        </ul>
+      )
+    }
+
+    <BackToTopButton />
+  </main>
+  <CodeBlockCopy />
+  <Footer />
+</Layout>
+
+<script is:inline data-astro-rerun>
+  function createProgressBar() {
+    const progressContainer = document.createElement("div");
+    progressContainer.className =
+      "progress-container fixed top-0 z-10 h-1 w-full bg-background";
+
+    const progressBar = document.createElement("div");
+    progressBar.className = "progress-bar h-1 w-0 bg-accent";
+    progressBar.id = "myBar";
+
+    progressContainer.appendChild(progressBar);
+    document.body.appendChild(progressContainer);
+  }
+  createProgressBar();
+
+  function updateScrollProgress() {
+    document.addEventListener("scroll", () => {
+      const winScroll =
+        document.body.scrollTop || document.documentElement.scrollTop;
+      const height =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      if (document) {
+        const myBar = document.getElementById("myBar");
+        if (myBar) {
+          myBar.style.width = scrolled + "%";
+        }
+      }
+    });
+  }
+  updateScrollProgress();
+
+  function addHeadingLinks() {
+    const headings = Array.from(
+      document.querySelectorAll("h2, h3, h4, h5, h6")
+    );
+    for (const heading of headings) {
+      heading.classList.add("group");
+      const link = document.createElement("a");
+      link.className =
+        "heading-link ms-2 no-underline opacity-75 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100";
+      link.href = "#" + heading.id;
+
+      const span = document.createElement("span");
+      span.ariaHidden = "true";
+      span.innerText = "#";
+      link.appendChild(span);
+      heading.appendChild(link);
+    }
+  }
+  addHeadingLinks();
+</script>
