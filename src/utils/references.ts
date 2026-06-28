@@ -3,7 +3,8 @@ import { SECTIONS, type SectionId } from "@/config";
 import { slugifyStr } from "./slugify";
 
 export type ReferenceEntry =
-  CollectionEntry<"cmds"> | CollectionEntry<"prompts">;
+  | CollectionEntry<"cmds">
+  | CollectionEntry<"prompts">;
 
 export type ReferenceSection = (typeof SECTIONS)[number];
 
