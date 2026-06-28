@@ -5,11 +5,6 @@ export const SITE = {
   desc: "技術資料とか、メモ書きとか",
   title: "page",
   ogImage: "astropaper-og.jpg",
-  editLink: {
-    enabled: true,
-    text: "Edit page",
-    url: "https://github.com/himadajin/page/edit/main/",
-  },
   dynamicOgImage: true,
   dir: "ltr", // "rtl" | "auto"
   lang: "ja", // html lang code. Set this empty and default will be "en"
