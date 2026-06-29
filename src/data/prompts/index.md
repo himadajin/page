@@ -18,7 +18,7 @@ tags: []
   - [Claude Opus 4.7](/prompts/claude-opus-4-7) ([Japanese translation](/prompts/claude-opus-4-7-jp))
   - [Claude Opus 4.6](/prompts/claude-opus-4-6) ([Japanese translation](/prompts/claude-opus-4-6-jp))
   - [Claude Sonnet 4.6](/prompts/claude-sonnet-4-6)
-  - [Claude Design](/prompts/claude-design)
+  - [Claude Design](/prompts/claude-design) ([Japanese translation](/prompts/claude-design-jp))
   - [Claude Mobile iOS](/prompts/claude-mobile-ios) ([Japanese translation](/prompts/claude-mobile-ios-jp))
   - [Claude for Excel](/prompts/claude-for-excel) ([Japanese translation](/prompts/claude-for-excel-jp))
   - [Claude for Word](/prompts/claude-for-word) ([Japanese translation](/prompts/claude-for-word-jp))
