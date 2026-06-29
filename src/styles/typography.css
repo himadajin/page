@@ -50,15 +50,19 @@
     }
 
     a {
-      @apply wrap-break-word text-foreground decoration-dashed underline-offset-4 hover:text-accent focus-visible:no-underline;
+      @apply wrap-break-word text-foreground decoration-foreground/35 decoration-dashed underline-offset-4 hover:text-accent hover:decoration-accent focus-visible:no-underline;
     }
 
     ul {
       @apply overflow-x-clip;
     }
 
-    li {
-      @apply marker:text-accent;
+    ul li {
+      @apply marker:text-foreground/35;
+    }
+
+    ol li {
+      @apply marker:text-foreground/45;
     }
 
     hr {
@@ -110,6 +114,60 @@
 
     pre {
       @apply focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed;
+    }
+  }
+
+  .app-prose.prompts-index {
+    h2 {
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.375rem;
+    }
+
+    > h2:first-child {
+      margin-top: 0;
+    }
+
+    > h2 + ul {
+      margin-top: 0.75rem;
+    }
+
+    > ul {
+      margin-bottom: 0;
+      padding-inline-start: 1.25rem;
+    }
+
+    > ul + h2 {
+      margin-top: 2.25rem;
+    }
+
+    > ul > li {
+      margin-top: 0.375rem;
+      margin-bottom: 0.375rem;
+    }
+
+    > ul > li:has(> ul) {
+      margin-top: 1.25rem;
+      margin-bottom: 0;
+      color: var(--foreground);
+      font-weight: 500;
+    }
+
+    > ul > li:has(> ul):first-child {
+      margin-top: 0.375rem;
+    }
+
+    > ul > li > ul {
+      margin-top: 0.5rem;
+      margin-bottom: 0;
+      padding-inline-start: 1.25rem;
+      font-weight: 400;
+    }
+
+    > ul > li > ul > li {
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem;
+      line-height: 1.75;
     }
   }
 

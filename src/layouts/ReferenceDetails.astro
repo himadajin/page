@@ -13,7 +13,7 @@ import { SITE } from "@/config";
 
 type Props = ReferenceItem;
 
-const { entry, href, section } = Astro.props;
+const { entry, href } = Astro.props;
 
 const { title, description, ogImage: initOgImage, tags } = entry.data;
 
@@ -53,14 +53,6 @@ const layoutProps = {
     >
       {title}
     </h1>
-    <div class="my-2 flex items-center gap-2">
-      <a
-        href={section.path}
-        class="text-sm text-foreground/70 hover:text-accent"
-      >
-        {section.label}
-      </a>
-    </div>
     <article
       id="article"
       class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg)"
