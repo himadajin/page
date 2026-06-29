@@ -57,8 +57,12 @@
       @apply overflow-x-clip;
     }
 
-    li {
-      @apply marker:text-accent;
+    ul li {
+      @apply marker:text-foreground/35;
+    }
+
+    ol li {
+      @apply marker:text-foreground/45;
     }
 
     hr {
