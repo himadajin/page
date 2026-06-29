@@ -3240,10 +3240,11 @@ for (const block of toolResultBlocks) {
 
 `<web_search_tool>`
 
-The API also supports the use of the web search tool. The web search tool allows Claude to search for current information on the web. This is particularly useful for:  
-- Finding recent events or news  
-- Looking up current information beyond Claude's knowledge cutoff  
-- Researching topics that require up-to-date data  
+The API also supports the use of the web search tool. The web search tool allows Claude to search for current information on the web. This is particularly useful for:
+
+- Finding recent events or news
+- Looking up current information beyond Claude's knowledge cutoff
+- Researching topics that require up-to-date data
 - Fact-checking or verifying information
 
 To enable web search in your API calls, add this to the tools parameter:
