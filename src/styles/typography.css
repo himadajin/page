@@ -3,7 +3,7 @@
 @layer base {
   /* ===== Override default Tailwind Typography styles ===== */
   .app-prose {
-    @apply prose;
+    @apply prose overflow-x-clip;
 
     h1,
     h2,
@@ -97,7 +97,7 @@
     }
 
     .astro-code code {
-      @apply flex-[1_0_100%] bg-inherit p-0;
+      @apply block min-w-max bg-inherit p-0;
     }
 
     blockquote {
@@ -173,15 +173,15 @@
 
   /* ===== Code Blocks & Syntax Highlighting ===== */
   .astro-code {
-    @apply flex border bg-(--shiki-light-bg) text-(--shiki-light) outline-border [&_span]:text-(--shiki-light);
+    @apply block border bg-(--shiki-light-bg) text-(--shiki-light) outline-border [&_span]:text-(--shiki-light);
   }
 
   .code-block-wrapper {
-    @apply my-6 overflow-hidden rounded-md border border-border bg-background shadow-[0_1px_2px_rgba(40,39,40,0.035)];
+    @apply my-6 max-w-full min-w-0 overflow-hidden rounded-md border border-border bg-background shadow-[0_1px_2px_rgba(40,39,40,0.035)];
   }
 
   .code-block-wrapper .astro-code {
-    @apply m-0 rounded-none border-0;
+    @apply m-0 max-w-full min-w-0 overflow-x-auto overflow-y-hidden rounded-none border-0;
   }
 
   .code-block-wrapper[data-language="md"] .astro-code,
