@@ -13,9 +13,17 @@ tags: []
 ## System Prompts
 
 - Anthropic
-  - [Claude Opus 4.6](/prompts/claude-opus-4-6) ([Japanese translation](/prompts/claude-opus-4-6-jp))
+  - [Claude Opus 4.8](/prompts/claude-opus-4-8)
   - [Claude Opus 4.7](/prompts/claude-opus-4-7) ([Japanese translation](/prompts/claude-opus-4-7-jp))
+  - [Claude Opus 4.6](/prompts/claude-opus-4-6) ([Japanese translation](/prompts/claude-opus-4-6-jp))
+  - [Claude Sonnet 4.6](/prompts/claude-sonnet-4-6)
   - [Claude Fable 5](/prompts/claude-fable-5) ([Japanese translation](/prompts/claude-fable-5-jp))
+  - [Claude Design](/prompts/claude-design)
+  - [Claude for Excel](/prompts/claude-for-excel)
+  - [Claude for Word](/prompts/claude-for-word)
+  - [Claude in PowerPoint](/prompts/claude-in-powerpoint)
+  - [Claude Mobile iOS](/prompts/claude-mobile-ios)
+  - [Claude Visualize](/prompts/claude-visualize)
 - OpenAI
   - [Codex GPT-5.4 mini](/prompts/codex-gpt-5-4-mini)
   - [Codex GPT-5.4](/prompts/codex-gpt-5-4)
