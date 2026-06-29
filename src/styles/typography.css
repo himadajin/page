@@ -50,7 +50,7 @@
     }
 
     a {
-      @apply wrap-break-word text-foreground decoration-dashed underline-offset-4 hover:text-accent focus-visible:no-underline;
+      @apply wrap-break-word text-foreground decoration-foreground/35 decoration-dashed underline-offset-4 hover:text-accent hover:decoration-accent focus-visible:no-underline;
     }
 
     ul {
