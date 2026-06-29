@@ -35,9 +35,9 @@ tags: []
 - Google
   - [Gemini 3.5 Flash](/prompts/gemini-3-5-flash) ([Japanese translation](/prompts/gemini-3-5-flash-jp))
   - [Gemini 3.1 Pro](/prompts/gemini-3-1-pro) ([Japanese translation](/prompts/gemini-3-1-pro-jp))
-  - [Gemini 2.5 Pro Web App](/prompts/gemini-2-5-pro-webapp)
+  - [Gemini 2.5 Pro Web App](/prompts/gemini-2-5-pro-webapp) ([Japanese translation](/prompts/gemini-2-5-pro-webapp-jp))
   - [Antigravity CLI](/prompts/antigravity-cli)
-  - [Gemini CLI](/prompts/gemini-cli)
-  - [Gemini in Chrome](/prompts/gemini-in-chrome)
-  - [Gemini YouTube](/prompts/gemini-youtube)
+  - [Gemini CLI](/prompts/gemini-cli) ([Japanese translation](/prompts/gemini-cli-jp))
+  - [Gemini in Chrome](/prompts/gemini-in-chrome) ([Japanese translation](/prompts/gemini-in-chrome-jp))
+  - [Gemini YouTube](/prompts/gemini-youtube) ([Japanese translation](/prompts/gemini-youtube-jp))
   - [Nano Banana 2 API](/prompts/nano-banana-2-api)
