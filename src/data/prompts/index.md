@@ -26,11 +26,11 @@ tags: []
   - [Visualize](/prompts/claude-visualize) ([Japanese translation](/prompts/claude-visualize-jp))
 - OpenAI
   - [Codex GPT-5.5](/prompts/codex-gpt-5-5) ([Japanese translation](/prompts/codex-gpt-5-5-jp))
-  - [Codex GPT-5.4](/prompts/codex-gpt-5-4)
-  - [Codex GPT-5.4 mini](/prompts/codex-gpt-5-4-mini)
-  - [Codex computer-use](/prompts/codex-computer-use)
-  - [Codex control-chrome](/prompts/codex-control-chrome)
-  - [Codex control-in-app-browser](/prompts/codex-control-in-app-browser)
+  - [Codex GPT-5.4](/prompts/codex-gpt-5-4) ([Japanese translation](/prompts/codex-gpt-5-4-jp))
+  - [Codex GPT-5.4 mini](/prompts/codex-gpt-5-4-mini) ([Japanese translation](/prompts/codex-gpt-5-4-mini-jp))
+  - [Codex computer-use](/prompts/codex-computer-use) ([Japanese translation](/prompts/codex-computer-use-jp))
+  - [Codex control-chrome](/prompts/codex-control-chrome) ([Japanese translation](/prompts/codex-control-chrome-jp))
+  - [Codex control-in-app-browser](/prompts/codex-control-in-app-browser) ([Japanese translation](/prompts/codex-control-in-app-browser-jp))
   - [GPT-5.5 thinking](/prompts/gpt-5-5-thinking) ([Japanese translation](/prompts/gpt-5-5-thinking-jp))
 - Google
   - [Gemini 3.5 Flash](/prompts/gemini-3-5-flash) ([Japanese translation](/prompts/gemini-3-5-flash-jp))
