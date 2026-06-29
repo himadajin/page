@@ -19,20 +19,23 @@ const getBreadcrumbLabel = (breadcrumb: string) =>
   breadcrumb;
 ---
 
-<nav class="app-layout mt-8 mb-1" aria-label="breadcrumb">
+<nav class="app-layout mt-6 mb-2" aria-label="breadcrumb">
   <ul
-    class="font-light [&>li]:inline [&>li:not(:last-child)>a]:hover:opacity-100"
+    class="flex flex-wrap items-center text-sm leading-5 font-normal text-foreground/65"
   >
     <li>
-      <a href="/" class="opacity-80">Home</a>
-      <span aria-hidden="true" class="opacity-80">&raquo;</span>
+      <a href="/" class="text-foreground/70 hover:text-accent">Home</a>
+      <span aria-hidden="true" class="mx-2 text-foreground/35">&raquo;</span>
     </li>
     {
       breadcrumbList.map((breadcrumb, index) =>
         index + 1 === breadcrumbList.length ? (
           <li>
             <span
-              class:list={["capitalize opacity-75", { lowercase: index > 0 }]}
+              class:list={[
+                "text-foreground/60 capitalize",
+                { lowercase: index > 0 },
+              ]}
               aria-current="page"
             >
               {/* make the last part lowercase in Home > Tags > some-tag */}
@@ -43,11 +46,13 @@ const getBreadcrumbLabel = (breadcrumb: string) =>
           <li>
             <a
               href={`/${breadcrumbList.slice(0, index + 1).join("/")}/`}
-              class="capitalize opacity-70"
+              class="text-foreground/70 capitalize hover:text-accent"
             >
               {getBreadcrumbLabel(breadcrumb)}
             </a>
-            <span aria-hidden="true">&raquo;</span>
+            <span aria-hidden="true" class="mx-2 text-foreground/35">
+              &raquo;
+            </span>
           </li>
         )
       )
