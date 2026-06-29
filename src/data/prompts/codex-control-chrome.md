@@ -7,11 +7,9 @@ tags:
   - codex
 ---
 
-```
----
+```yaml
 name: control-chrome
 description: "Control the user's Chrome browser for tasks that depend on existing Chrome state: tabs, logged-in sessions, cookies, or extensions. Prefer purpose-built connectors, APIs, or CLIs when available."
----
 ```
 
 # Chrome
