@@ -8,6 +8,7 @@ import Breadcrumb from "@/components/Breadcrumb.astro";
 import CodeBlockCopy from "@/components/CodeBlockCopy.astro";
 import HeadingLinks from "@/components/HeadingLinks.astro";
 import ReadingMap from "@/components/ReadingMap.astro";
+import { getOutlineSections, shouldShowOutline } from "@/utils/outline";
 import type { ReferenceItem } from "@/utils/references";
 import { slugifyStr } from "@/utils/slugify";
 import { SITE } from "@/config";
@@ -19,6 +20,8 @@ const { entry, href } = Astro.props;
 const { title, description, ogImage: initOgImage, tags } = entry.data;
 
 const { Content, headings } = await render(entry);
+const outlineSections = getOutlineSections(headings);
+const hasOutline = shouldShowOutline(outlineSections);
 
 let ogImageUrl: string | undefined;
 
@@ -45,7 +48,10 @@ const layoutProps = {
 ---
 
 <Layout {...layoutProps}>
-  <Header />
+  <Header
+    outlineTitle={hasOutline ? title : undefined}
+    outlineSections={hasOutline ? outlineSections : []}
+  />
   <Breadcrumb />
   <main id="main-content" class="app-layout pb-12" data-pagefind-body>
     <h1
@@ -73,7 +79,7 @@ const layoutProps = {
       )
     }
   </main>
-  <ReadingMap title={title} headings={headings} />
+  <ReadingMap title={title} sections={hasOutline ? outlineSections : []} />
   <CodeBlockCopy />
   <HeadingLinks />
   <Footer />
