@@ -70,7 +70,7 @@ const browseLinks = [
     >
       <button
         id="menu-btn"
-        class="focus-outline fixed top-4 right-4 z-[80] inline-flex items-center gap-2 border border-border bg-background/95 px-3 py-2 text-sm leading-none font-semibold shadow-[0_0.5rem_1.5rem_rgb(40_39_40_/_10%)] backdrop-blur sm:hidden"
+        class="site-menu-button focus-outline fixed top-4 right-4 z-[80] inline-flex items-center gap-2 border border-border bg-background/95 px-3 py-2 text-sm leading-none font-semibold shadow-[0_0.5rem_1.5rem_rgb(40_39_40_/_10%)] backdrop-blur"
         aria-label="Open Menu"
         aria-expanded="false"
         aria-controls="mobile-menu"
@@ -81,7 +81,7 @@ const browseLinks = [
       </button>
 
       <ul
-        class="hidden sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0"
+        class="site-nav-desktop mt-0 hidden w-auto gap-x-5 gap-y-0"
         aria-label="Browse"
       >
         {
@@ -122,7 +122,7 @@ const browseLinks = [
 
 <div
   id="mobile-menu"
-  class="fixed inset-x-4 top-16 z-[70] max-h-[calc(100svh-5rem)] overflow-y-auto border border-border bg-background/95 px-4 py-4 shadow-[0_1rem_2.5rem_rgb(40_39_40_/_12%)] backdrop-blur-md sm:hidden"
+  class="site-menu-panel fixed inset-x-4 top-16 z-[70] max-h-[calc(100svh-5rem)] overflow-y-auto border border-border bg-background/95 px-4 py-4 shadow-[0_1rem_2.5rem_rgb(40_39_40_/_12%)] backdrop-blur-md"
   hidden
 >
   {
@@ -176,6 +176,17 @@ const browseLinks = [
 </div>
 
 <style>
+  @media (min-width: 1180px) {
+    .site-menu-button,
+    .site-menu-panel {
+      display: none;
+    }
+
+    .site-nav-desktop {
+      display: flex;
+    }
+  }
+
   .mobile-menu__title {
     margin: 0 0 0.75rem;
     overflow: hidden;
