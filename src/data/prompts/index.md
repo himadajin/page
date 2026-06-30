@@ -12,6 +12,8 @@ tags: []
 
 ## System Prompts
 
+- OpenWebUI
+  - [OpenWebUI General Small](/prompts/openwebui-general-small)
 - Anthropic
   - [Claude Fable 5](/prompts/claude-fable-5) ([Japanese translation](/prompts/claude-fable-5-jp))
   - [Claude Opus 4.8](/prompts/claude-opus-4-8)
