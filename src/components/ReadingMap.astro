@@ -1,0 +1,680 @@
+---
+import type { MarkdownHeading } from "astro";
+import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
+import IconX from "@/assets/icons/IconX.svg";
+
+type Props = {
+  title: string;
+  headings: MarkdownHeading[];
+};
+
+type ReadingMapSection = {
+  id: string;
+  text: string;
+  children: Array<{
+    id: string;
+    text: string;
+  }>;
+};
+
+const { title, headings } = Astro.props;
+
+const sections: ReadingMapSection[] = [];
+let currentSection: ReadingMapSection | undefined;
+
+for (const heading of headings) {
+  if (heading.depth === 2) {
+    currentSection = {
+      id: heading.slug,
+      text: heading.text,
+      children: [],
+    };
+    sections.push(currentSection);
+  } else if (heading.depth === 3 && currentSection) {
+    currentSection.children.push({
+      id: heading.slug,
+      text: heading.text,
+    });
+  }
+}
+
+const shouldShowReadingMap = sections.length >= 2;
+---
+
+{
+  shouldShowReadingMap && (
+    <div class="reading-map" data-reading-map>
+      <aside
+        class="reading-map__desktop"
+        aria-label="Reading map"
+        data-reading-map-desktop
+      >
+        <div class="reading-map__meta">
+          <p class="reading-map__eyebrow">Reading</p>
+          <p class="reading-map__title">{title}</p>
+          <p class="reading-map__progress" data-reading-map-progress-text>
+            0%
+          </p>
+        </div>
+        <nav class="reading-map__nav" aria-label="Page sections">
+          <a class="reading-map__top" href="#main-content">
+            Top
+          </a>
+          <ol class="reading-map__list">
+            {sections.map(section => (
+              <li
+                class="reading-map__item"
+                data-reading-map-section={section.id}
+              >
+                <a class="reading-map__link" href={`#${section.id}`}>
+                  {section.text}
+                </a>
+                {section.children.length > 0 && (
+                  <ol class="reading-map__children" data-reading-map-children>
+                    {section.children.map(child => (
+                      <li>
+                        <a
+                          class="reading-map__child-link"
+                          href={`#${child.id}`}
+                        >
+                          {child.text}
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
+                )}
+              </li>
+            ))}
+          </ol>
+        </nav>
+      </aside>
+
+      <button
+        type="button"
+        class="reading-map__mobile-button"
+        aria-label="Open reading map"
+        aria-expanded="false"
+        aria-controls="reading-map-sheet"
+        data-reading-map-toggle
+      >
+        <span class="reading-map__ring" data-reading-map-progress-ring />
+        <IconMenuDeep class="reading-map__button-icon" aria-hidden="true" />
+      </button>
+
+      <div
+        class="reading-map__overlay"
+        data-reading-map-overlay
+        aria-hidden="true"
+      />
+      <section
+        id="reading-map-sheet"
+        class="reading-map__sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="reading-map-sheet-title"
+        aria-hidden="true"
+        hidden
+        data-reading-map-sheet
+      >
+        <div class="reading-map__sheet-header">
+          <div>
+            <p class="reading-map__eyebrow">Reading</p>
+            <h2 id="reading-map-sheet-title" class="reading-map__sheet-title">
+              {title}
+            </h2>
+            <p class="reading-map__current" data-reading-map-current>
+              Top
+            </p>
+          </div>
+          <button
+            type="button"
+            class="reading-map__close"
+            aria-label="Close reading map"
+            data-reading-map-close
+          >
+            <IconX aria-hidden="true" />
+          </button>
+        </div>
+        <p class="reading-map__sheet-progress" data-reading-map-progress-text>
+          0%
+        </p>
+        <nav class="reading-map__sheet-nav" aria-label="Page sections">
+          <a class="reading-map__top" href="#main-content">
+            Top
+          </a>
+          <ol class="reading-map__list">
+            {sections.map(section => (
+              <li
+                class="reading-map__item"
+                data-reading-map-section={section.id}
+              >
+                <a class="reading-map__link" href={`#${section.id}`}>
+                  {section.text}
+                </a>
+                {section.children.length > 0 && (
+                  <ol class="reading-map__children" data-reading-map-children>
+                    {section.children.map(child => (
+                      <li>
+                        <a
+                          class="reading-map__child-link"
+                          href={`#${child.id}`}
+                        >
+                          {child.text}
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
+                )}
+              </li>
+            ))}
+          </ol>
+        </nav>
+      </section>
+    </div>
+  )
+}
+
+<style>
+  .reading-map {
+    --reading-map-panel-width: 12rem;
+  }
+
+  .reading-map__desktop {
+    position: fixed;
+    inset-block-start: 7.5rem;
+    inset-inline-start: max(1rem, calc(50% - 36rem));
+    z-index: 20;
+    display: none;
+    width: var(--reading-map-panel-width);
+    max-height: calc(100svh - 9rem);
+    overflow-y: auto;
+    padding-inline-start: 0.75rem;
+    border-inline-start: 1px solid var(--border);
+    background: color-mix(in srgb, var(--background) 92%, transparent);
+    backdrop-filter: blur(10px);
+    scrollbar-width: thin;
+  }
+
+  .reading-map__meta {
+    margin-block-end: 0.75rem;
+  }
+
+  .reading-map__eyebrow {
+    margin: 0;
+    color: color-mix(in srgb, var(--foreground) 48%, transparent);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .reading-map__title,
+  .reading-map__progress,
+  .reading-map__current,
+  .reading-map__sheet-progress {
+    margin: 0;
+    color: color-mix(in srgb, var(--foreground) 62%, transparent);
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+
+  .reading-map__title {
+    display: -webkit-box;
+    margin-block-start: 0.25rem;
+    overflow: hidden;
+    color: var(--foreground);
+    font-weight: 700;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .reading-map__progress,
+  .reading-map__sheet-progress {
+    margin-block-start: 0.25rem;
+    font-weight: 700;
+  }
+
+  .reading-map__nav,
+  .reading-map__sheet-nav {
+    font-size: 0.8125rem;
+    line-height: 1.35;
+  }
+
+  .reading-map__top,
+  .reading-map__link,
+  .reading-map__child-link {
+    display: block;
+    border-radius: 0.25rem;
+    text-decoration: none;
+  }
+
+  .reading-map__top {
+    margin-block-end: 0.375rem;
+    padding: 0.25rem 0.375rem;
+    color: color-mix(in srgb, var(--foreground) 58%, transparent);
+    font-weight: 700;
+  }
+
+  .reading-map__list,
+  .reading-map__children {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .reading-map__item {
+    position: relative;
+    margin-block: 0.125rem;
+  }
+
+  .reading-map__item::before {
+    position: absolute;
+    inset-block: 0.3rem;
+    inset-inline-start: -0.75rem;
+    width: 2px;
+    border-radius: 999px;
+    background: transparent;
+    content: "";
+  }
+
+  .reading-map__link {
+    display: -webkit-box;
+    overflow: hidden;
+    padding: 0.25rem 0.375rem;
+    color: color-mix(in srgb, var(--foreground) 52%, transparent);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .reading-map__children {
+    display: none;
+    padding-block: 0.125rem 0.25rem;
+    padding-inline-start: 0.625rem;
+  }
+
+  .reading-map__child-link {
+    padding: 0.1875rem 0.375rem;
+    color: color-mix(in srgb, var(--foreground) 58%, transparent);
+    font-size: 0.75rem;
+  }
+
+  .reading-map__top:hover,
+  .reading-map__link:hover,
+  .reading-map__child-link:hover {
+    color: var(--accent);
+  }
+
+  .reading-map__item.is-active::before {
+    background: var(--accent);
+  }
+
+  .reading-map__item.is-active > .reading-map__link {
+    color: var(--foreground);
+    font-weight: 700;
+  }
+
+  .reading-map__item.is-active > .reading-map__children {
+    display: block;
+  }
+
+  .reading-map__mobile-button {
+    position: fixed;
+    inset-inline-end: 1rem;
+    inset-block-end: 1.5rem;
+    z-index: 50;
+    display: grid;
+    width: 3.5rem;
+    height: 3.5rem;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--background);
+    color: var(--foreground);
+    box-shadow: 0 0.75rem 2rem rgb(40 39 40 / 16%);
+  }
+
+  .reading-map__ring {
+    position: absolute;
+    inset: -0.25rem;
+    z-index: -1;
+    border-radius: inherit;
+    background-image: conic-gradient(
+      var(--accent),
+      var(--accent) 0%,
+      transparent 0%
+    );
+  }
+
+  .reading-map__button-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .reading-map__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: none;
+    background: rgb(40 39 40 / 18%);
+  }
+
+  .reading-map__sheet {
+    position: fixed;
+    inset-inline: 0;
+    inset-block-end: 0;
+    z-index: 70;
+    max-height: min(76svh, 42rem);
+    overflow-y: auto;
+    border-start-start-radius: 0.5rem;
+    border-start-end-radius: 0.5rem;
+    border: 1px solid var(--border);
+    border-block-end: 0;
+    background: var(--background);
+    padding: 1rem;
+    box-shadow: 0 -1rem 3rem rgb(40 39 40 / 14%);
+  }
+
+  .reading-map__sheet[hidden] {
+    display: none;
+  }
+
+  .reading-map__sheet-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-block-end: 0.5rem;
+  }
+
+  .reading-map__sheet-title {
+    margin: 0.125rem 0 0;
+    color: var(--foreground);
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .reading-map__current {
+    margin-block-start: 0.25rem;
+  }
+
+  .reading-map__close {
+    display: grid;
+    flex: 0 0 auto;
+    width: 2.25rem;
+    height: 2.25rem;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 0.375rem;
+    color: color-mix(in srgb, var(--foreground) 70%, transparent);
+  }
+
+  .reading-map__sheet-progress {
+    margin-block-end: 0.75rem;
+    color: var(--accent);
+  }
+
+  .reading-map__sheet-nav {
+    padding-block-end: 1rem;
+  }
+
+  .reading-map__sheet .reading-map__link,
+  .reading-map__sheet .reading-map__top {
+    padding-block: 0.5rem;
+  }
+
+  .reading-map__sheet .reading-map__child-link {
+    padding-block: 0.375rem;
+  }
+
+  .reading-map.is-open .reading-map__overlay {
+    display: block;
+  }
+
+  @media (min-width: 1180px) {
+    .reading-map__desktop {
+      display: block;
+    }
+
+    .reading-map__mobile-button,
+    .reading-map__overlay,
+    .reading-map__sheet {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .reading-map__sheet {
+      animation: reading-map-sheet-in 160ms ease-out;
+    }
+  }
+
+  @keyframes reading-map-sheet-in {
+    from {
+      transform: translateY(1rem);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+</style>
+
+<script is:inline data-astro-rerun>
+  function setupReadingMap() {
+    window.__readingMapAbortController?.abort();
+
+    const controller = new AbortController();
+    window.__readingMapAbortController = controller;
+    const { signal } = controller;
+
+    const root = document.querySelector("[data-reading-map]");
+    if (!root) return;
+
+    const sectionItems = Array.from(
+      root.querySelectorAll("[data-reading-map-section]")
+    );
+    const sectionHeadings = sectionItems
+      .map(item => {
+        const id = item.getAttribute("data-reading-map-section");
+        const heading = id ? document.getElementById(id) : null;
+        return heading ? { id, heading } : null;
+      })
+      .filter(Boolean);
+
+    const progressTexts = Array.from(
+      root.querySelectorAll("[data-reading-map-progress-text]")
+    );
+    const progressRing = root.querySelector("[data-reading-map-progress-ring]");
+    const currentText = root.querySelector("[data-reading-map-current]");
+    const toggle = root.querySelector("[data-reading-map-toggle]");
+    const closeButton = root.querySelector("[data-reading-map-close]");
+    const overlay = root.querySelector("[data-reading-map-overlay]");
+    const sheet = root.querySelector("[data-reading-map-sheet]");
+
+    let activeId = "";
+    let ticking = false;
+
+    function scrollItemIntoMap(item) {
+      const container = item.closest(
+        ".reading-map__desktop, .reading-map__sheet"
+      );
+      if (!container || getComputedStyle(container).display === "none") return;
+
+      const itemRect = item.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+      const itemTop = itemRect.top - containerRect.top + container.scrollTop;
+      const itemBottom = itemTop + itemRect.height;
+      const padding = 24;
+
+      if (itemTop < container.scrollTop + padding) {
+        container.scrollTop = Math.max(0, itemTop - padding);
+      } else if (
+        itemBottom >
+        container.scrollTop + container.clientHeight - padding
+      ) {
+        container.scrollTop = itemBottom - container.clientHeight + padding;
+      }
+    }
+
+    function setActive(id) {
+      if (!id || activeId === id) return;
+      activeId = id;
+
+      for (const item of sectionItems) {
+        const isActive = item.getAttribute("data-reading-map-section") === id;
+        item.classList.toggle("is-active", isActive);
+
+        const link = item.querySelector(".reading-map__link");
+        if (link) {
+          if (isActive) {
+            link.setAttribute("aria-current", "location");
+          } else {
+            link.removeAttribute("aria-current");
+          }
+        }
+
+        if (isActive && currentText) {
+          currentText.textContent = link?.textContent?.trim() || "Top";
+        }
+
+        if (isActive) {
+          scrollItemIntoMap(item);
+        }
+      }
+    }
+
+    function findActiveHeading() {
+      const offset = 140;
+      let nextActiveId = sectionHeadings[0]?.id || "";
+
+      for (const item of sectionHeadings) {
+        const top = item.heading.getBoundingClientRect().top;
+        if (top <= offset) {
+          nextActiveId = item.id;
+        } else {
+          break;
+        }
+      }
+
+      setActive(nextActiveId);
+    }
+
+    function updateProgress() {
+      const rootElement = document.documentElement;
+      const scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
+      const scrollTop = rootElement.scrollTop || document.body.scrollTop;
+      const progress =
+        scrollTotal > 0
+          ? Math.min(100, Math.max(0, scrollTop / scrollTotal))
+          : 0;
+      const percent = Math.round(progress * 100);
+
+      for (const text of progressTexts) {
+        text.textContent = `${percent}%`;
+      }
+
+      if (progressRing) {
+        progressRing.style.setProperty(
+          "background-image",
+          `conic-gradient(var(--accent), var(--accent) ${percent}%, transparent ${percent}%)`
+        );
+      }
+    }
+
+    function update() {
+      ticking = false;
+      findActiveHeading();
+      updateProgress();
+    }
+
+    function requestUpdate() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    }
+
+    function openSheet() {
+      if (!toggle || !sheet) return;
+      root.classList.add("is-open");
+      sheet.hidden = false;
+      sheet.setAttribute("aria-hidden", "false");
+      overlay?.setAttribute("aria-hidden", "false");
+      toggle.setAttribute("aria-expanded", "true");
+      toggle.setAttribute("aria-label", "Close reading map");
+      closeButton?.focus();
+    }
+
+    function closeSheet() {
+      if (!toggle || !sheet) return;
+      root.classList.remove("is-open");
+      sheet.hidden = true;
+      sheet.setAttribute("aria-hidden", "true");
+      overlay?.setAttribute("aria-hidden", "true");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-label", "Open reading map");
+    }
+
+    toggle?.addEventListener(
+      "click",
+      () => {
+        const isOpen = toggle.getAttribute("aria-expanded") === "true";
+        if (isOpen) {
+          closeSheet();
+        } else {
+          openSheet();
+        }
+      },
+      { signal }
+    );
+
+    closeButton?.addEventListener("click", closeSheet, { signal });
+    overlay?.addEventListener("click", closeSheet, { signal });
+
+    root.addEventListener(
+      "click",
+      event => {
+        const target = event.target;
+        if (target instanceof Element && target.closest("a[href^='#']")) {
+          closeSheet();
+        }
+      },
+      { signal }
+    );
+
+    document.addEventListener(
+      "keydown",
+      event => {
+        if (event.key === "Escape") {
+          closeSheet();
+        }
+      },
+      { signal }
+    );
+
+    document.addEventListener("scroll", requestUpdate, {
+      passive: true,
+      signal,
+    });
+    window.addEventListener("resize", requestUpdate, { signal });
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(() => requestUpdate(), {
+        rootMargin: "-20% 0px -70% 0px",
+        threshold: 0,
+      });
+
+      for (const item of sectionHeadings) {
+        observer.observe(item.heading);
+      }
+
+      signal.addEventListener("abort", () => observer.disconnect(), {
+        once: true,
+      });
+    }
+
+    update();
+  }
+
+  setupReadingMap();
+</script>
