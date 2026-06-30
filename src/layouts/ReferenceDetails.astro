@@ -4,9 +4,11 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Tag from "@/components/Tag.astro";
-import BackToTopButton from "@/components/BackToTopButton.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import CodeBlockCopy from "@/components/CodeBlockCopy.astro";
+import HeadingLinks from "@/components/HeadingLinks.astro";
+import ReadingMap from "@/components/ReadingMap.astro";
+import { getOutlineSections, shouldShowOutline } from "@/utils/outline";
 import type { ReferenceItem } from "@/utils/references";
 import { slugifyStr } from "@/utils/slugify";
 import { SITE } from "@/config";
@@ -17,7 +19,9 @@ const { entry, href } = Astro.props;
 
 const { title, description, ogImage: initOgImage, tags } = entry.data;
 
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
+const outlineSections = getOutlineSections(headings);
+const hasOutline = shouldShowOutline(outlineSections);
 
 let ogImageUrl: string | undefined;
 
@@ -39,12 +43,14 @@ const layoutProps = {
   title: `${title} | ${SITE.title}`,
   description,
   ogImage,
-  scrollSmooth: true,
 };
 ---
 
 <Layout {...layoutProps}>
-  <Header />
+  <Header
+    outlineTitle={hasOutline ? title : undefined}
+    outlineSections={hasOutline ? outlineSections : []}
+  />
   <Breadcrumb />
   <main id="main-content" class="app-layout pb-12" data-pagefind-body>
     <h1
@@ -71,63 +77,9 @@ const layoutProps = {
         </ul>
       )
     }
-
-    <BackToTopButton />
   </main>
+  <ReadingMap title={title} sections={hasOutline ? outlineSections : []} />
   <CodeBlockCopy />
+  <HeadingLinks />
   <Footer />
 </Layout>
-
-<script is:inline data-astro-rerun>
-  function createProgressBar() {
-    const progressContainer = document.createElement("div");
-    progressContainer.className =
-      "progress-container fixed top-0 z-10 h-1 w-full bg-background";
-
-    const progressBar = document.createElement("div");
-    progressBar.className = "progress-bar h-1 w-0 bg-accent";
-    progressBar.id = "myBar";
-
-    progressContainer.appendChild(progressBar);
-    document.body.appendChild(progressContainer);
-  }
-  createProgressBar();
-
-  function updateScrollProgress() {
-    document.addEventListener("scroll", () => {
-      const winScroll =
-        document.body.scrollTop || document.documentElement.scrollTop;
-      const height =
-        document.documentElement.scrollHeight -
-        document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      if (document) {
-        const myBar = document.getElementById("myBar");
-        if (myBar) {
-          myBar.style.width = scrolled + "%";
-        }
-      }
-    });
-  }
-  updateScrollProgress();
-
-  function addHeadingLinks() {
-    const headings = Array.from(
-      document.querySelectorAll("h2, h3, h4, h5, h6")
-    );
-    for (const heading of headings) {
-      heading.classList.add("group");
-      const link = document.createElement("a");
-      link.className =
-        "heading-link ms-2 no-underline opacity-75 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100";
-      link.href = "#" + heading.id;
-
-      const span = document.createElement("span");
-      span.ariaHidden = "true";
-      span.innerText = "#";
-      link.appendChild(span);
-      heading.appendChild(link);
-    }
-  }
-  addHeadingLinks();
-</script>

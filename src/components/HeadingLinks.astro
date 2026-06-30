@@ -1,0 +1,30 @@
+<script is:inline data-astro-rerun>
+  function addHeadingLinks() {
+    const headings = Array.from(
+      document.querySelectorAll("h2, h3, h4, h5, h6")
+    );
+
+    for (const heading of headings) {
+      if (!heading.id || heading.querySelector(":scope > .heading-link")) {
+        continue;
+      }
+
+      heading.classList.add("group");
+
+      const link = document.createElement("a");
+      link.className =
+        "heading-link ms-2 no-underline opacity-75 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100";
+      link.href = "#" + heading.id;
+      link.setAttribute("aria-label", `Link to ${heading.textContent}`);
+
+      const span = document.createElement("span");
+      span.ariaHidden = "true";
+      span.innerText = "#";
+
+      link.appendChild(span);
+      heading.appendChild(link);
+    }
+  }
+
+  addHeadingLinks();
+</script>
