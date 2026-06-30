@@ -9,7 +9,6 @@ type Props = {
   profile?: string;
   description?: string;
   ogImage?: string;
-  scrollSmooth?: boolean;
 };
 
 const {
@@ -17,7 +16,6 @@ const {
   profile = SITE.profile,
   description = SITE.desc,
   ogImage = SITE.ogImage ? `/${SITE.ogImage}` : "/og.png",
-  scrollSmooth = false,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.url);
@@ -39,11 +37,7 @@ const structuredData = {
 ---
 
 <!doctype html>
-<html
-  dir={SITE.dir}
-  lang=`${SITE.lang ?? "en"}`
-  class={`${scrollSmooth && "scroll-smooth"}`}
->
+<html dir={SITE.dir} lang=`${SITE.lang ?? "en"}`>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
