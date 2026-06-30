@@ -70,12 +70,11 @@ const browseLinks = [
     >
       <button
         id="menu-btn"
-        class="site-menu-button focus-outline fixed top-4 right-4 z-[80] inline-flex items-center gap-2 border border-border bg-background/95 px-3 py-2 text-sm leading-none font-semibold shadow-[0_0.5rem_1.5rem_rgb(40_39_40_/_10%)] backdrop-blur"
-        aria-label="Open Menu"
+        class="site-menu-button focus-outline fixed top-4 right-4 z-[80] inline-flex size-9 items-center justify-center"
+        aria-label="Open navigation"
         aria-expanded="false"
         aria-controls="mobile-menu"
       >
-        <span>Menu</span>
         <IconX id="close-icon" class="hidden size-4" />
         <IconMenuDeep id="menu-icon" class="size-4" />
       </button>
@@ -122,7 +121,7 @@ const browseLinks = [
 
 <div
   id="mobile-menu"
-  class="site-menu-panel fixed top-16 z-[70] max-h-[calc(100svh-5rem)] overflow-y-auto border border-border bg-background/95 px-4 py-4 shadow-[0_1rem_2.5rem_rgb(40_39_40_/_12%)] backdrop-blur-md"
+  class="site-menu-panel fixed top-16 z-[70] max-h-[calc(100svh-5rem)] overflow-y-auto bg-background/98 px-4 py-4"
   hidden
 >
   {
@@ -151,7 +150,7 @@ const browseLinks = [
     )
   }
 
-  <div class:list={["mobile-menu__browse", { "mt-6": hasOutline }]}>
+  <div class:list={["mobile-menu__browse", { "has-outline": hasOutline }]}>
     <p class="mobile-menu__label">Browse</p>
     <nav aria-label="Browse">
       <ul class="mobile-menu__browse-list">
@@ -178,9 +177,28 @@ const browseLinks = [
 <style>
   .site-menu-panel {
     inset-inline-start: auto;
-    inset-inline-end: 1rem;
+    inset-inline-end: 0;
     box-sizing: border-box;
-    width: min(calc(100vw - 2rem), 28rem);
+    width: min(calc(100vw - 1rem), 28rem);
+    border-inline-start: 1px solid var(--border);
+    box-shadow: -1.5rem 0 2.5rem rgb(40 39 40 / 0.06);
+  }
+
+  .site-menu-button {
+    border: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+    background: color-mix(in srgb, var(--background) 92%, transparent);
+    color: var(--foreground);
+    transition:
+      background-color 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease;
+  }
+
+  .site-menu-button:hover,
+  .site-menu-button[aria-expanded="true"] {
+    border-color: color-mix(in srgb, var(--accent) 34%, var(--border));
+    background: var(--background);
+    color: var(--accent);
   }
 
   @media (min-width: 1180px) {
@@ -213,6 +231,12 @@ const browseLinks = [
     letter-spacing: 0.04em;
     line-height: 1.2;
     text-transform: uppercase;
+  }
+
+  .mobile-menu__browse.has-outline {
+    margin-block-start: 1.25rem;
+    padding-block-start: 0.875rem;
+    border-block-start: 1px solid var(--border);
   }
 
   .mobile-menu__top,
@@ -345,7 +369,10 @@ const browseLinks = [
 
     function setMenuOpen(open: boolean) {
       navButton.setAttribute("aria-expanded", open ? "true" : "false");
-      navButton.setAttribute("aria-label", open ? "Close Menu" : "Open Menu");
+      navButton.setAttribute(
+        "aria-label",
+        open ? "Close navigation" : "Open navigation"
+      );
       menuPanel.hidden = !open;
       openIcon.classList.toggle("hidden", open);
       shutIcon.classList.toggle("hidden", !open);
