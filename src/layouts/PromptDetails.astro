@@ -1,5 +1,5 @@
 ---
-import { render } from "astro:content";
+import { render, type CollectionEntry } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
@@ -14,13 +14,18 @@ import { getOutlineSections, shouldShowOutline } from "@/utils/outline";
 import { slugifyStr } from "@/utils/slugify";
 import { SITE } from "@/config";
 
-type Props = ReferenceItem;
+type Props = ReferenceItem & {
+  translationEntry: CollectionEntry<"promptTranslations">;
+};
 
-const { entry, href } = Astro.props;
+const { entry, href, translationEntry } = Astro.props;
 
 const { title, description, ogImage: initOgImage, tags } = entry.data;
 
 const { Content, headings } = await render(entry);
+const hasTranslation = Boolean((translationEntry.body ?? "").trim());
+const translation = hasTranslation ? await render(translationEntry) : undefined;
+const TranslationContent = translation?.Content;
 const outlineSections = getOutlineSections(headings);
 const hasOutline = shouldShowOutline(outlineSections);
 
@@ -47,6 +52,7 @@ const layoutProps = {
 };
 
 const promptCopySourceId = `prompt-copy-source-${entry.id.replaceAll("/", "-")}`;
+const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
 ---
 
 <Layout {...layoutProps}>
@@ -63,14 +69,60 @@ const promptCopySourceId = `prompt-copy-source-${entry.id.replaceAll("/", "-")}`
       {title}
     </h1>
     <div class="my-2 flex flex-wrap items-center gap-x-2 gap-y-1">
-      <PromptCopyButton text={entry.body ?? ""} sourceId={promptCopySourceId} />
+      <PromptCopyButton
+        text={entry.body ?? ""}
+        sourceId={promptCopySourceId}
+        label="Copy original prompt"
+      />
+      {
+        TranslationContent && (
+          <div
+            class="inline-flex rounded-md border border-border bg-background p-0.5 text-sm"
+            role="group"
+            aria-label="Prompt language"
+            data-prompt-variant-group={promptVariantGroupId}
+          >
+            <button
+              type="button"
+              class="rounded-sm px-3 py-1.5 font-medium text-foreground transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent focus-visible:outline-dashed aria-pressed:bg-accent aria-pressed:text-background"
+              aria-pressed="true"
+              data-prompt-variant-trigger="original"
+            >
+              Original
+            </button>
+            <button
+              type="button"
+              class="rounded-sm px-3 py-1.5 font-medium text-foreground transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent focus-visible:outline-dashed aria-pressed:bg-accent aria-pressed:text-background"
+              aria-pressed="false"
+              data-prompt-variant-trigger="translation"
+            >
+              Japanese
+            </button>
+          </div>
+        )
+      }
     </div>
     <article
       id="article"
       class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg)"
+      data-prompt-variant-panel={promptVariantGroupId}
+      data-prompt-variant="original"
     >
       <Content />
     </article>
+    {
+      TranslationContent && (
+        <article
+          id="article-translation"
+          class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg)"
+          data-prompt-variant-panel={promptVariantGroupId}
+          data-prompt-variant="translation"
+          hidden
+        >
+          <TranslationContent />
+        </article>
+      )
+    }
 
     <hr class="my-8 border-dashed" />
 
@@ -89,3 +141,33 @@ const promptCopySourceId = `prompt-copy-source-${entry.id.replaceAll("/", "-")}`
   <HeadingLinks />
   <Footer />
 </Layout>
+
+<script>
+  document.querySelectorAll("[data-prompt-variant-group]").forEach(group => {
+    const groupId = group.getAttribute("data-prompt-variant-group");
+    if (!groupId) return;
+
+    const triggers = group.querySelectorAll("[data-prompt-variant-trigger]");
+    const panels = document.querySelectorAll(
+      `[data-prompt-variant-panel="${groupId}"]`
+    );
+
+    triggers.forEach(trigger => {
+      trigger.addEventListener("click", () => {
+        const variant = trigger.getAttribute("data-prompt-variant-trigger");
+        if (!variant) return;
+
+        triggers.forEach(item => {
+          item.setAttribute("aria-pressed", String(item === trigger));
+        });
+
+        panels.forEach(panel => {
+          panel.toggleAttribute(
+            "hidden",
+            panel.getAttribute("data-prompt-variant") !== variant
+          );
+        });
+      });
+    });
+  });
+</script>

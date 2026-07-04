@@ -25,4 +25,12 @@ const prompts = defineCollection({
     }),
 });
 
-export const collections = { cmds, prompts };
+const promptTranslations = defineCollection({
+  loader: glob({
+    pattern: "**/[^_]*.md",
+    base: "./src/data/prompt-translations",
+  }),
+  schema: z.object({}).catchall(z.unknown()),
+});
+
+export const collections = { cmds, prompts, promptTranslations };

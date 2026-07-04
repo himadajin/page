@@ -1,11 +1,17 @@
 ---
 type Props = {
   class?: string;
+  label?: string;
   sourceId: string;
   text: string;
 };
 
-const { class: className = "", sourceId, text } = Astro.props;
+const {
+  class: className = "",
+  label = "Copy prompt",
+  sourceId,
+  text,
+} = Astro.props;
 const serializedText = JSON.stringify(text).replaceAll("</", "<\\/");
 ---
 
@@ -17,6 +23,7 @@ const serializedText = JSON.stringify(text).replaceAll("</", "<\\/");
   ]}
   data-prompt-copy-button
   data-prompt-copy-source={sourceId}
+  data-prompt-copy-idle-label={label}
   data-state="idle"
 >
   <svg
@@ -60,7 +67,7 @@ const serializedText = JSON.stringify(text).replaceAll("</", "<\\/");
     <path d="M18 6 6 18"></path>
     <path d="m6 6 12 12"></path>
   </svg>
-  <span data-prompt-copy-label>Copy prompt</span>
+  <span data-prompt-copy-label>{label}</span>
 </button>
 <script
   is:inline
@@ -84,7 +91,7 @@ const serializedText = JSON.stringify(text).replaceAll("</", "<\\/");
     } else if (state === "failed") {
       label.textContent = "Copy failed";
     } else {
-      label.textContent = "Copy prompt";
+      label.textContent = button.dataset.promptCopyIdleLabel || "Copy prompt";
     }
   }
 
