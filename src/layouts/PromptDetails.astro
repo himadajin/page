@@ -249,25 +249,27 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
           return;
         }
 
-        const anchor = getScrollAnchor(currentPanel);
-
         triggers.forEach(item => {
           item.setAttribute("aria-pressed", String(item === trigger));
         });
 
-        panels.forEach(panel => {
-          panel.toggleAttribute(
-            "hidden",
-            panel.getAttribute("data-prompt-variant") !== variant
-          );
-        });
-
-        document.documentElement.style.overflowAnchor = "none";
-        restoreScrollAnchor(targetPanel, anchor);
         window.requestAnimationFrame(() => {
+          const anchor = getScrollAnchor(currentPanel);
+
+          panels.forEach(panel => {
+            panel.toggleAttribute(
+              "hidden",
+              panel.getAttribute("data-prompt-variant") !== variant
+            );
+          });
+
+          document.documentElement.style.overflowAnchor = "none";
           restoreScrollAnchor(targetPanel, anchor);
           window.requestAnimationFrame(() => {
-            document.documentElement.style.overflowAnchor = "";
+            restoreScrollAnchor(targetPanel, anchor);
+            window.requestAnimationFrame(() => {
+              document.documentElement.style.overflowAnchor = "";
+            });
           });
         });
       });
