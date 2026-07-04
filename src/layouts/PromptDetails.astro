@@ -74,37 +74,43 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
         sourceId={promptCopySourceId}
         label="Copy original prompt"
       />
-      {
-        TranslationContent && (
-          <div
-            class="inline-flex rounded-md border border-border bg-background p-0.5 text-sm"
-            role="group"
-            aria-label="Prompt language"
-            data-prompt-variant-group={promptVariantGroupId}
-          >
-            <button
-              type="button"
-              class="rounded-sm px-3 py-1.5 font-medium text-foreground transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent focus-visible:outline-dashed aria-pressed:bg-accent aria-pressed:text-background"
-              aria-pressed="true"
-              data-prompt-variant-trigger="original"
-            >
-              Original
-            </button>
-            <button
-              type="button"
-              class="rounded-sm px-3 py-1.5 font-medium text-foreground transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent focus-visible:outline-dashed aria-pressed:bg-accent aria-pressed:text-background"
-              aria-pressed="false"
-              data-prompt-variant-trigger="translation"
-            >
-              Japanese
-            </button>
-          </div>
-        )
-      }
     </div>
+    {
+      TranslationContent && (
+        <div
+          class="sticky top-2 z-10 mt-8 flex w-full max-w-app border-y border-border bg-background/90 py-2 text-sm backdrop-blur-sm"
+          role="group"
+          aria-label="Prompt language"
+          data-prompt-variant-group={promptVariantGroupId}
+        >
+          <button
+            type="button"
+            class="relative px-0 py-1 text-foreground transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:bg-accent after:opacity-0 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent focus-visible:outline-dashed aria-pressed:after:opacity-100"
+            aria-pressed="true"
+            data-prompt-variant-trigger="original"
+          >
+            Original
+          </button>
+          <span class="px-2 py-1 text-foreground/35" aria-hidden="true">
+            /
+          </span>
+          <button
+            type="button"
+            class="relative px-0 py-1 text-foreground transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:bg-accent after:opacity-0 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent focus-visible:outline-dashed aria-pressed:after:opacity-100"
+            aria-pressed="false"
+            data-prompt-variant-trigger="translation"
+          >
+            Japanese
+          </button>
+        </div>
+      )
+    }
     <article
       id="article"
-      class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg)"
+      class:list={[
+        "app-prose w-full max-w-app prose-pre:bg-(--shiki-light-bg)",
+        TranslationContent ? "mt-6" : "mt-8",
+      ]}
       data-prompt-variant-panel={promptVariantGroupId}
       data-prompt-variant="original"
     >
@@ -114,7 +120,7 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
       TranslationContent && (
         <article
           id="article-translation"
-          class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg)"
+          class="app-prose mt-6 w-full max-w-app prose-pre:bg-(--shiki-light-bg)"
           data-prompt-variant-panel={promptVariantGroupId}
           data-prompt-variant="translation"
           hidden
@@ -151,11 +157,99 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
     const panels = document.querySelectorAll(
       `[data-prompt-variant-panel="${groupId}"]`
     );
+    const headingSelector = "h1, h2, h3, h4, h5, h6";
+
+    function getPanelHeadings(panel: Element) {
+      return Array.from(panel.querySelectorAll<HTMLElement>(headingSelector));
+    }
+
+    function getVisibleTop() {
+      return window.scrollY + Math.round(window.innerHeight * 0.22);
+    }
+
+    function getPanelProgress(panel: HTMLElement) {
+      const top = panel.getBoundingClientRect().top + window.scrollY;
+      const height = Math.max(panel.scrollHeight - window.innerHeight, 1);
+      return Math.min(Math.max((window.scrollY - top) / height, 0), 1);
+    }
+
+    function getScrollAnchor(panel: HTMLElement) {
+      const visibleTop = getVisibleTop();
+      const headings = getPanelHeadings(panel);
+      let headingIndex = -1;
+      let headingTop = 0;
+
+      headings.forEach((heading, index) => {
+        const top = heading.getBoundingClientRect().top + window.scrollY;
+        if (top <= visibleTop) {
+          headingIndex = index;
+          headingTop = top;
+        }
+      });
+
+      if (headingIndex >= 0) {
+        return {
+          headingId: headings[headingIndex]?.id ?? "",
+          headingIndex,
+          offset: visibleTop - headingTop,
+          progress: getPanelProgress(panel),
+        };
+      }
+
+      const panelTop = panel.getBoundingClientRect().top + window.scrollY;
+      return {
+        headingId: "",
+        headingIndex,
+        offset: visibleTop - panelTop,
+        progress: getPanelProgress(panel),
+      };
+    }
+
+    function restoreScrollAnchor(
+      panel: HTMLElement,
+      anchor: ReturnType<typeof getScrollAnchor>
+    ) {
+      const headings = getPanelHeadings(panel);
+      const targetHeading =
+        headings.find(heading => heading.id === anchor.headingId) ??
+        headings[anchor.headingIndex];
+
+      if (targetHeading) {
+        const targetTop =
+          targetHeading.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({
+          top: Math.max(
+            0,
+            targetTop + anchor.offset - Math.round(window.innerHeight * 0.22)
+          ),
+          behavior: "auto",
+        });
+        return;
+      }
+
+      const panelTop = panel.getBoundingClientRect().top + window.scrollY;
+      const targetTop =
+        panelTop +
+        Math.max(panel.scrollHeight - window.innerHeight, 1) * anchor.progress;
+      window.scrollTo({ top: Math.max(0, targetTop), behavior: "auto" });
+    }
 
     triggers.forEach(trigger => {
       trigger.addEventListener("click", () => {
         const variant = trigger.getAttribute("data-prompt-variant-trigger");
         if (!variant) return;
+
+        const currentPanel = Array.from(panels).find(
+          panel => !panel.hasAttribute("hidden")
+        ) as HTMLElement | undefined;
+        const targetPanel = Array.from(panels).find(
+          panel => panel.getAttribute("data-prompt-variant") === variant
+        ) as HTMLElement | undefined;
+        if (!currentPanel || !targetPanel || currentPanel === targetPanel) {
+          return;
+        }
+
+        const anchor = getScrollAnchor(currentPanel);
 
         triggers.forEach(item => {
           item.setAttribute("aria-pressed", String(item === trigger));
@@ -166,6 +260,15 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
             "hidden",
             panel.getAttribute("data-prompt-variant") !== variant
           );
+        });
+
+        document.documentElement.style.overflowAnchor = "none";
+        restoreScrollAnchor(targetPanel, anchor);
+        window.requestAnimationFrame(() => {
+          restoreScrollAnchor(targetPanel, anchor);
+          window.requestAnimationFrame(() => {
+            document.documentElement.style.overflowAnchor = "";
+          });
         });
       });
     });
