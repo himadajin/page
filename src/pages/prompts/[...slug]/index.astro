@@ -9,21 +9,33 @@ import {
 
 type Props = {
   entry: CollectionEntry<"prompts">;
+  translationEntry: CollectionEntry<"promptTranslations">;
 };
 
 export async function getStaticPaths() {
   const entries = await getCollection("prompts");
+  const translationEntries = await getCollection("promptTranslations");
+  const translationsById = new Map(
+    translationEntries.map(entry => [entry.id, entry])
+  );
 
   return entries
     .filter(entry => !isIndexEntry(entry))
-    .map(entry => ({
-      params: { slug: getReferencePath("prompts", entry.id, false) },
-      props: { entry },
-    }));
+    .map(entry => {
+      const translationEntry = translationsById.get(entry.id);
+      if (!translationEntry) {
+        throw new Error(`Missing prompt translation entry: ${entry.id}`);
+      }
+
+      return {
+        params: { slug: getReferencePath("prompts", entry.id, false) },
+        props: { entry, translationEntry },
+      };
+    });
 }
 
-const { entry } = Astro.props;
+const { entry, translationEntry } = Astro.props;
 const item = toReferenceItem("prompts", entry);
 ---
 
-<PromptDetails {...item} />
+<PromptDetails {...item} translationEntry={translationEntry} />
