@@ -111,22 +111,27 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
         "app-prose w-full max-w-app prose-pre:bg-(--shiki-light-bg)",
         TranslationContent ? "mt-6" : "mt-8",
       ]}
-      data-prompt-variant-panel={promptVariantGroupId}
-      data-prompt-variant="original"
+      data-prompt-current={promptVariantGroupId}
+      data-prompt-active-variant="original"
     >
       <Content />
     </article>
     {
       TranslationContent && (
-        <article
-          id="article-translation"
-          class="app-prose mt-6 w-full max-w-app prose-pre:bg-(--shiki-light-bg)"
-          data-prompt-variant-panel={promptVariantGroupId}
-          data-prompt-variant="translation"
-          hidden
-        >
-          <TranslationContent />
-        </article>
+        <>
+          <template
+            data-prompt-template={promptVariantGroupId}
+            data-prompt-variant="original"
+          >
+            <Content />
+          </template>
+          <template
+            data-prompt-template={promptVariantGroupId}
+            data-prompt-variant="translation"
+          >
+            <TranslationContent />
+          </template>
+        </>
       )
     }
 
@@ -154,28 +159,37 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
     if (!groupId) return;
 
     const triggers = group.querySelectorAll("[data-prompt-variant-trigger]");
-    const panels = document.querySelectorAll(
-      `[data-prompt-variant-panel="${groupId}"]`
-    );
     const headingSelector = "h1, h2, h3, h4, h5, h6";
 
-    function getPanelHeadings(panel: Element) {
-      return Array.from(panel.querySelectorAll<HTMLElement>(headingSelector));
+    function getActiveArticle() {
+      return document.querySelector<HTMLElement>(
+        `[data-prompt-current="${groupId}"]`
+      );
+    }
+
+    function getTemplate(variant: string) {
+      return document.querySelector<HTMLTemplateElement>(
+        `template[data-prompt-template="${groupId}"][data-prompt-variant="${variant}"]`
+      );
+    }
+
+    function getArticleHeadings(article: Element) {
+      return Array.from(article.querySelectorAll<HTMLElement>(headingSelector));
     }
 
     function getVisibleTop() {
       return window.scrollY + Math.round(window.innerHeight * 0.22);
     }
 
-    function getPanelProgress(panel: HTMLElement) {
-      const top = panel.getBoundingClientRect().top + window.scrollY;
-      const height = Math.max(panel.scrollHeight - window.innerHeight, 1);
+    function getArticleProgress(article: HTMLElement) {
+      const top = article.getBoundingClientRect().top + window.scrollY;
+      const height = Math.max(article.scrollHeight - window.innerHeight, 1);
       return Math.min(Math.max((window.scrollY - top) / height, 0), 1);
     }
 
-    function getScrollAnchor(panel: HTMLElement) {
+    function getScrollAnchor(article: HTMLElement) {
       const visibleTop = getVisibleTop();
-      const headings = getPanelHeadings(panel);
+      const headings = getArticleHeadings(article);
       let headingIndex = -1;
       let headingTop = 0;
 
@@ -192,24 +206,24 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
           headingId: headings[headingIndex]?.id ?? "",
           headingIndex,
           offset: visibleTop - headingTop,
-          progress: getPanelProgress(panel),
+          progress: getArticleProgress(article),
         };
       }
 
-      const panelTop = panel.getBoundingClientRect().top + window.scrollY;
+      const articleTop = article.getBoundingClientRect().top + window.scrollY;
       return {
         headingId: "",
         headingIndex,
-        offset: visibleTop - panelTop,
-        progress: getPanelProgress(panel),
+        offset: visibleTop - articleTop,
+        progress: getArticleProgress(article),
       };
     }
 
     function restoreScrollAnchor(
-      panel: HTMLElement,
+      article: HTMLElement,
       anchor: ReturnType<typeof getScrollAnchor>
     ) {
-      const headings = getPanelHeadings(panel);
+      const headings = getArticleHeadings(article);
       const targetHeading =
         headings.find(heading => heading.id === anchor.headingId) ??
         headings[anchor.headingIndex];
@@ -227,10 +241,11 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
         return;
       }
 
-      const panelTop = panel.getBoundingClientRect().top + window.scrollY;
+      const articleTop = article.getBoundingClientRect().top + window.scrollY;
       const targetTop =
-        panelTop +
-        Math.max(panel.scrollHeight - window.innerHeight, 1) * anchor.progress;
+        articleTop +
+        Math.max(article.scrollHeight - window.innerHeight, 1) *
+          anchor.progress;
       window.scrollTo({ top: Math.max(0, targetTop), behavior: "auto" });
     }
 
@@ -239,34 +254,29 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
         const variant = trigger.getAttribute("data-prompt-variant-trigger");
         if (!variant) return;
 
-        const currentPanel = Array.from(panels).find(
-          panel => !panel.hasAttribute("hidden")
-        ) as HTMLElement | undefined;
-        const targetPanel = Array.from(panels).find(
-          panel => panel.getAttribute("data-prompt-variant") === variant
-        ) as HTMLElement | undefined;
-        if (!currentPanel || !targetPanel || currentPanel === targetPanel) {
-          return;
-        }
+        const article = getActiveArticle();
+        const template = getTemplate(variant);
+        if (!article || !template) return;
+
+        const activeVariant = article.dataset.promptActiveVariant;
+        if (activeVariant === variant) return;
 
         triggers.forEach(item => {
           item.setAttribute("aria-pressed", String(item === trigger));
         });
 
         window.requestAnimationFrame(() => {
-          const anchor = getScrollAnchor(currentPanel);
+          const anchor = getScrollAnchor(article);
+          const content = template.content.cloneNode(true);
 
-          panels.forEach(panel => {
-            panel.toggleAttribute(
-              "hidden",
-              panel.getAttribute("data-prompt-variant") !== variant
-            );
-          });
+          article.replaceChildren(content);
+          article.dataset.promptActiveVariant = variant;
+          document.dispatchEvent(new CustomEvent("prompt:content-ready"));
 
           document.documentElement.style.overflowAnchor = "none";
-          restoreScrollAnchor(targetPanel, anchor);
+          restoreScrollAnchor(article, anchor);
           window.requestAnimationFrame(() => {
-            restoreScrollAnchor(targetPanel, anchor);
+            restoreScrollAnchor(article, anchor);
             window.requestAnimationFrame(() => {
               document.documentElement.style.overflowAnchor = "";
             });
