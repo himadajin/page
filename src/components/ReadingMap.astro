@@ -301,6 +301,8 @@ const shouldShowReadingMap = sections.length >= 2;
 
   setupReadingMap();
 
+  document.addEventListener("prompt:content-ready", setupReadingMap);
+
   // Runs on view transitions navigation
   document.addEventListener("astro:after-swap", setupReadingMap);
 </script>
