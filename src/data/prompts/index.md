@@ -13,6 +13,7 @@ tags: []
 ## System Prompts
 
 - OpenWebUI
+  - [OpenWebUI General Large](/prompts/openwebui-general-large)
   - [OpenWebUI General Small](/prompts/openwebui-general-small)
 - Anthropic
   - [Claude Fable 5](/prompts/claude-fable-5)
