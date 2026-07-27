@@ -28,3 +28,7 @@ public/pagefind
 
 # wrangler local state
 .wrangler/
+
+# local
+/local/
+/tmp/
