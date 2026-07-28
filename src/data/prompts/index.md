@@ -17,6 +17,7 @@ tags: []
   - [OpenWebUI General Small](/prompts/openwebui-general-small)
 - Anthropic
   - [Claude Fable 5](/prompts/claude-fable-5)
+  - [Claude Opus 5](/prompts/claude-opus-5)
   - [Claude Opus 4.8](/prompts/claude-opus-4-8)
   - [Claude Opus 4.7](/prompts/claude-opus-4-7)
   - [Claude Opus 4.6](/prompts/claude-opus-4-6)
