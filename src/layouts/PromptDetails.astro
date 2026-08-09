@@ -189,6 +189,18 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
 
     function getScrollAnchor(article: HTMLElement) {
       const visibleTop = getVisibleTop();
+      const articleTop = article.getBoundingClientRect().top + window.scrollY;
+
+      if (window.scrollY < articleTop) {
+        return {
+          headingId: "",
+          headingIndex: -1,
+          offset: 0,
+          progress: 0,
+          pageScrollY: window.scrollY,
+        };
+      }
+
       const headings = getArticleHeadings(article);
       let headingIndex = -1;
       let headingTop = 0;
@@ -207,15 +219,16 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
           headingIndex,
           offset: visibleTop - headingTop,
           progress: getArticleProgress(article),
+          pageScrollY: null,
         };
       }
 
-      const articleTop = article.getBoundingClientRect().top + window.scrollY;
       return {
         headingId: "",
         headingIndex,
         offset: visibleTop - articleTop,
         progress: getArticleProgress(article),
+        pageScrollY: null,
       };
     }
 
@@ -223,6 +236,11 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
       article: HTMLElement,
       anchor: ReturnType<typeof getScrollAnchor>
     ) {
+      if (anchor.pageScrollY !== null) {
+        window.scrollTo({ top: anchor.pageScrollY, behavior: "auto" });
+        return;
+      }
+
       const headings = getArticleHeadings(article);
       const targetHeading =
         headings.find(heading => heading.id === anchor.headingId) ??
