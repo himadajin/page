@@ -122,9 +122,7 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
           <template
             data-prompt-template={promptVariantGroupId}
             data-prompt-variant="original"
-          >
-            <Content />
-          </template>
+          />
           <template
             data-prompt-template={promptVariantGroupId}
             data-prompt-variant="translation"
@@ -273,11 +271,15 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
         if (!variant) return;
 
         const article = getActiveArticle();
-        const template = getTemplate(variant);
-        if (!article || !template) return;
+        const targetTemplate = getTemplate(variant);
+        if (!article || !targetTemplate) return;
 
         const activeVariant = article.dataset.promptActiveVariant;
+        if (!activeVariant) return;
         if (activeVariant === variant) return;
+
+        const activeTemplate = getTemplate(activeVariant);
+        if (!activeTemplate) return;
 
         triggers.forEach(item => {
           item.setAttribute("aria-pressed", String(item === trigger));
@@ -285,13 +287,15 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
 
         window.requestAnimationFrame(() => {
           const anchor = getScrollAnchor(article);
-          const content = template.content.cloneNode(true);
+          const activeContent = Array.from(article.childNodes);
+          const targetContent = Array.from(targetTemplate.content.childNodes);
 
-          article.replaceChildren(content);
+          document.documentElement.style.overflowAnchor = "none";
+          activeTemplate.content.replaceChildren(...activeContent);
+          article.replaceChildren(...targetContent);
           article.dataset.promptActiveVariant = variant;
           document.dispatchEvent(new CustomEvent("prompt:content-ready"));
 
-          document.documentElement.style.overflowAnchor = "none";
           restoreScrollAnchor(article, anchor);
           window.requestAnimationFrame(() => {
             restoreScrollAnchor(article, anchor);
