@@ -179,6 +179,12 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
       return window.scrollY + Math.round(window.innerHeight * 0.22);
     }
 
+    function runAfterNextPaint(callback: () => void) {
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(callback);
+      });
+    }
+
     function getArticleProgress(article: HTMLElement) {
       const top = article.getBoundingClientRect().top + window.scrollY;
       const height = Math.max(article.scrollHeight - window.innerHeight, 1);
@@ -269,6 +275,7 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
       trigger.addEventListener("click", () => {
         const variant = trigger.getAttribute("data-prompt-variant-trigger");
         if (!variant) return;
+        if (trigger.getAttribute("aria-pressed") === "true") return;
 
         const article = getActiveArticle();
         const targetTemplate = getTemplate(variant);
@@ -285,7 +292,7 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
           item.setAttribute("aria-pressed", String(item === trigger));
         });
 
-        window.requestAnimationFrame(() => {
+        runAfterNextPaint(() => {
           const anchor = getScrollAnchor(article);
           const activeContent = Array.from(article.childNodes);
           const targetContent = Array.from(targetTemplate.content.childNodes);
