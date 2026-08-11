@@ -55,13 +55,13 @@ const layoutProps = {
   <main id="main-content" class="app-layout pb-12" data-pagefind-body>
     <h1
       transition:name={slugifyStr(title.replaceAll(".", "-"))}
-      class="inline-block text-3xl font-medium tracking-tight text-accent sm:text-4xl"
+      class="inline-block text-2xl font-semibold tracking-tight text-accent"
     >
       {title}
     </h1>
     <article
       id="article"
-      class="app-prose mt-8 w-full max-w-app"
+      class="app-prose mt-6 w-full max-w-app"
     >
       <Content />
     </article>
@@ -70,7 +70,7 @@ const layoutProps = {
 
     {
       tags.length > 0 && (
-        <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
+        <ul class="my-6 flex flex-wrap gap-x-4 gap-y-2">
           {tags.map(tag => (
             <Tag tag={slugifyStr(tag)} tagName={tag} />
           ))}

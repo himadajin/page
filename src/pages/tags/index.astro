@@ -15,7 +15,7 @@ const tags = getUniqueTags(items);
 <Layout title={`Tags | ${SITE.title}`}>
   <Header />
   <Main pageTitle="Tags" pageDesc="資料を横断するタグです。">
-    <ul class="flex flex-wrap gap-6">
+    <ul class="flex flex-wrap gap-x-4 gap-y-2">
       {tags.map(({ tag, tagName }) => <Tag {tag} {tagName} />)}
     </ul>
   </Main>

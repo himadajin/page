@@ -64,7 +64,7 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
   <main id="main-content" class="app-layout pb-12" data-pagefind-body>
     <h1
       transition:name={slugifyStr(title.replaceAll(".", "-"))}
-      class="inline-block text-3xl font-medium tracking-tight text-accent sm:text-4xl"
+      class="inline-block text-2xl font-semibold tracking-tight text-accent"
     >
       {title}
     </h1>
@@ -109,7 +109,7 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
       id="article"
       class:list={[
         "app-prose w-full max-w-app",
-        TranslationContent ? "mt-6" : "mt-8",
+        TranslationContent ? "mt-4" : "mt-6",
       ]}
       data-prompt-current={promptVariantGroupId}
       data-prompt-active-variant="original"
@@ -137,7 +137,7 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
 
     {
       tags.length > 0 && (
-        <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
+        <ul class="my-6 flex flex-wrap gap-x-4 gap-y-2">
           {tags.map(tag => (
             <Tag tag={slugifyStr(tag)} tagName={tag} />
           ))}
