@@ -21,24 +21,17 @@ const getBreadcrumbLabel = (breadcrumb: string) =>
 
 <nav class="app-layout mt-6 mb-2" aria-label="breadcrumb">
   <ul
-    class="flex flex-wrap items-center text-sm leading-5 font-normal text-foreground/65"
+    class="flex flex-wrap items-center meta-label text-xs leading-5 text-foreground/65"
   >
     <li>
       <a href="/" class="text-foreground/70 hover:text-accent">Home</a>
-      <span aria-hidden="true" class="mx-2 text-foreground/35">&raquo;</span>
+      <span aria-hidden="true" class="mx-2 text-foreground/35">/</span>
     </li>
     {
       breadcrumbList.map((breadcrumb, index) =>
         index + 1 === breadcrumbList.length ? (
           <li>
-            <span
-              class:list={[
-                "text-foreground/60 capitalize",
-                { lowercase: index > 0 },
-              ]}
-              aria-current="page"
-            >
-              {/* make the last part lowercase in Home > Tags > some-tag */}
+            <span class="text-foreground/60" aria-current="page">
               {decodeURIComponent(getBreadcrumbLabel(breadcrumb))}
             </span>
           </li>
@@ -46,12 +39,12 @@ const getBreadcrumbLabel = (breadcrumb: string) =>
           <li>
             <a
               href={`/${breadcrumbList.slice(0, index + 1).join("/")}/`}
-              class="text-foreground/70 capitalize hover:text-accent"
+              class="text-foreground/70 hover:text-accent"
             >
               {getBreadcrumbLabel(breadcrumb)}
             </a>
             <span aria-hidden="true" class="mx-2 text-foreground/35">
-              &raquo;
+              /
             </span>
           </li>
         )

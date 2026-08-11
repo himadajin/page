@@ -58,6 +58,11 @@
   @apply mx-auto w-full max-w-app px-4;
 }
 
+/* Technical voice: small uppercase mono labels for metadata */
+@utility meta-label {
+  @apply font-mono tracking-[0.08em] uppercase;
+}
+
 .active-nav {
   @apply underline decoration-foreground decoration-2 underline-offset-8;
 }
