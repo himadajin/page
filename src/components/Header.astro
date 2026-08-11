@@ -2,7 +2,6 @@
 import IconX from "@/assets/icons/IconX.svg";
 import IconSearch from "@/assets/icons/IconSearch.svg";
 import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
-import LinkButton from "./LinkButton.astro";
 import { SECTIONS, SITE } from "@/config";
 import type { OutlineSection } from "@/utils/outline";
 
@@ -26,106 +25,88 @@ const isActive = (path: string) => {
   return currentPath === path || currentPathArray[0] === pathArray[0];
 };
 
-const browseLinks = [
+const navLinks = [
   ...SECTIONS.map(section => ({
     label: section.label,
     path: section.path,
     active: isActive(section.path),
   })),
   { label: "Tags", path: "/tags", active: isActive("/tags") },
-  { label: "Search", path: "/search", active: isActive("/search") },
 ];
 ---
 
 <a
   id="skip-to-content"
   href="#main-content"
-  class="absolute start-16 -top-full z-50 bg-background px-3 py-2 text-accent backdrop-blur-lg transition-all focus:top-4"
+  class="absolute start-16 -top-full z-[60] bg-background px-3 py-2 text-accent transition-all focus:top-16"
 >
   Skip to content
 </a>
 
 <header
-  class="app-layout flex flex-col items-center justify-between sm:flex-row"
+  id="site-header"
+  class="glass-panel sticky top-0 z-50 border-b border-transparent transition-[border-color] duration-200 data-scrolled:border-border"
 >
-  <div
-    id="top-nav-wrap"
-    class:list={[
-      "py-4 sm:py-6",
-      "border-b border-border",
-      "relative w-full bg-background",
-      "flex items-baseline justify-between sm:items-center",
-    ]}
-  >
-    <a
-      href="/"
-      class="absolute py-1 text-xl leading-8 font-semibold tracking-tight whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"
-    >
+  <div class="app-layout flex h-(--header-h) items-center justify-between gap-2">
+    <a href="/" class="text-base font-semibold tracking-tight whitespace-nowrap">
       {SITE.title}
     </a>
     <nav
       id="nav-menu"
-      class="flex w-full flex-col items-center sm:ms-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0"
+      class="flex items-center gap-0.5 sm:gap-1"
       aria-label="Site"
     >
-      <button
-        id="menu-btn"
-        class="site-menu-button focus-outline fixed top-4 right-4 z-[80] inline-flex size-9 items-center justify-center"
-        aria-label="Open navigation"
-        aria-expanded="false"
-        aria-controls="mobile-menu"
-      >
-        <IconX id="close-icon" class="hidden size-4" />
-        <IconMenuDeep id="menu-icon" class="size-4" />
-      </button>
-
-      <ul
-        class="site-nav-desktop mt-0 hidden w-auto gap-x-5 gap-y-0"
-        aria-label="Browse"
-      >
-        {
-          SECTIONS.map(section => (
-            <li>
-              <a
-                href={section.path}
-                class:list={{ "active-nav": isActive(section.path) }}
-              >
-                {section.label}
-              </a>
-            </li>
-          ))
-        }
-        <li>
-          <a href="/tags" class:list={{ "active-nav": isActive("/tags") }}>
-            Tags
-          </a>
-        </li>
-        <li>
-          <LinkButton
-            href="/search"
+      {
+        navLinks.map(link => (
+          <a
+            href={link.path}
             class:list={[
-              "focus-outline flex p-1",
-              { "[&>svg]:stroke-accent": isActive("/search") },
+              "px-2 py-1.5 text-[0.8125rem] leading-none underline-offset-4 transition-colors duration-150",
+              link.active
+                ? "active-nav text-foreground"
+                : "text-foreground/70 decoration-foreground/35 decoration-dashed hover:text-foreground hover:underline",
             ]}
-            title="Search"
-            aria-label="search"
           >
-            <IconSearch />
-            <span class="sr-only">Search</span>
-          </LinkButton>
-        </li>
-      </ul>
+            {link.label}
+          </a>
+        ))
+      }
+      <a
+        href="/search"
+        class:list={[
+          "grid size-8 place-items-center text-foreground/70 transition-colors duration-150 hover:text-foreground",
+          { "text-foreground": isActive("/search") },
+        ]}
+        title="Search"
+      >
+        <IconSearch class="size-4" />
+        <span class="sr-only">Search</span>
+      </a>
+      {
+        hasOutline && (
+          <button
+            id="menu-btn"
+            class="grid size-8 place-items-center text-foreground/70 transition-colors duration-150 hover:text-foreground min-[1180px]:hidden"
+            aria-label="Open sections"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+          >
+            <IconX id="close-icon" class="hidden size-4" />
+            <IconMenuDeep id="menu-icon" class="size-4" />
+          </button>
+        )
+      }
     </nav>
   </div>
 </header>
 
-<div
-  id="mobile-menu"
-  class="site-menu-panel fixed top-16 z-[70] max-h-[calc(100svh-5rem)] overflow-y-auto bg-background/98 px-4 py-4"
-  hidden
->
-  {
-    hasOutline && (
+{
+  hasOutline && (
+    <div
+      id="mobile-menu"
+      class="site-menu-panel fixed top-(--header-h) z-40 max-h-[calc(100svh-4.5rem)] overflow-y-auto px-4 py-4"
+      hidden
+    >
       <div class="mobile-menu__sections" data-menu-outline>
         <p class="mobile-menu__title">{outlineTitle}</p>
         <p class="mobile-menu__label">Sections</p>
@@ -147,68 +128,25 @@ const browseLinks = [
           </ol>
         </nav>
       </div>
-    )
-  }
-
-  <div class:list={["mobile-menu__browse", { "has-outline": hasOutline }]}>
-    <p class="mobile-menu__label">Browse</p>
-    <nav aria-label="Browse">
-      <ul class="mobile-menu__browse-list">
-        {
-          browseLinks.map(link => (
-            <li>
-              <a
-                href={link.path}
-                class:list={[
-                  "mobile-menu__browse-link",
-                  { "is-active": link.active },
-                ]}
-              >
-                {link.label}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
-  </div>
-</div>
+    </div>
+  )
+}
 
 <style>
   .site-menu-panel {
     inset-inline-start: auto;
     inset-inline-end: 0;
     box-sizing: border-box;
-    width: min(calc(100vw - 1rem), 28rem);
+    width: min(calc(100vw - 1rem), 24rem);
     border-inline-start: 1px solid var(--border);
-    box-shadow: -1.5rem 0 2.5rem rgb(40 39 40 / 0.06);
-  }
-
-  .site-menu-button {
-    border: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
-    background: color-mix(in srgb, var(--background) 92%, transparent);
-    color: var(--foreground);
-    transition:
-      background-color 160ms ease,
-      border-color 160ms ease,
-      color 160ms ease;
-  }
-
-  .site-menu-button:hover,
-  .site-menu-button[aria-expanded="true"] {
-    border-color: color-mix(in srgb, var(--accent) 34%, var(--border));
-    background: var(--background);
-    color: var(--accent);
+    border-block-end: 1px solid var(--border);
+    background: color-mix(in srgb, var(--background) 88%, transparent);
+    backdrop-filter: blur(12px);
   }
 
   @media (min-width: 1180px) {
-    .site-menu-button,
     .site-menu-panel {
       display: none;
-    }
-
-    .site-nav-desktop {
-      display: flex;
     }
   }
 
@@ -217,7 +155,7 @@ const browseLinks = [
     overflow: hidden;
     color: var(--foreground);
     font-size: 0.875rem;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.35;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -226,17 +164,12 @@ const browseLinks = [
   .mobile-menu__label {
     margin: 0 0 0.5rem;
     color: color-mix(in srgb, var(--foreground) 46%, transparent);
+    font-family: var(--font-mono);
     font-size: 0.6875rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
+    font-weight: 400;
+    letter-spacing: 0.1em;
     line-height: 1.2;
     text-transform: uppercase;
-  }
-
-  .mobile-menu__browse.has-outline {
-    margin-block-start: 1.25rem;
-    padding-block-start: 0.875rem;
-    border-block-start: 1px solid var(--border);
   }
 
   .mobile-menu__top,
@@ -250,7 +183,7 @@ const browseLinks = [
     padding: 0.375rem 0.625rem;
     color: color-mix(in srgb, var(--foreground) 58%, transparent);
     font-size: 0.875rem;
-    font-weight: 700;
+    font-weight: 500;
   }
 
   .mobile-menu__section-list {
@@ -286,39 +219,16 @@ const browseLinks = [
 
   .mobile-menu__section-item.is-active > .mobile-menu__section-link {
     color: var(--foreground);
-    font-weight: 700;
-  }
-
-  .mobile-menu__browse-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.25rem 1rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .mobile-menu__browse-link {
-    display: block;
-    padding-block: 0.375rem;
-    color: color-mix(in srgb, var(--foreground) 70%, transparent);
-    font-size: 0.875rem;
-    font-weight: 700;
-    text-decoration: none;
-  }
-
-  .mobile-menu__browse-link.is-active {
-    color: var(--foreground);
-    text-decoration-line: underline;
-    text-decoration-color: var(--foreground);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.35rem;
+    font-weight: 600;
   }
 
   .mobile-menu__top:hover,
-  .mobile-menu__section-link:hover,
-  .mobile-menu__browse-link:hover {
+  .mobile-menu__section-link:hover {
     color: var(--accent);
+    text-decoration-line: underline;
+    text-decoration-style: dashed;
+    text-decoration-color: color-mix(in srgb, var(--foreground) 35%, transparent);
+    text-underline-offset: 4px;
   }
 </style>
 
@@ -333,6 +243,18 @@ const browseLinks = [
     const controller = new AbortController();
     navWindow.__headerNavAbortController = controller;
     const { signal } = controller;
+
+    const header = document.getElementById("site-header");
+    if (header) {
+      const updateScrolled = () => {
+        header.toggleAttribute("data-scrolled", window.scrollY > 8);
+      };
+      document.addEventListener("scroll", updateScrolled, {
+        passive: true,
+        signal,
+      });
+      updateScrolled();
+    }
 
     const menuBtn = document.querySelector<HTMLButtonElement>("#menu-btn");
     const mobileMenu = document.querySelector<HTMLElement>("#mobile-menu");
@@ -366,7 +288,7 @@ const browseLinks = [
       navButton.setAttribute("aria-expanded", open ? "true" : "false");
       navButton.setAttribute(
         "aria-label",
-        open ? "Close navigation" : "Open navigation"
+        open ? "Close sections" : "Open sections"
       );
       menuPanel.hidden = !open;
       openIcon.classList.toggle("hidden", open);
