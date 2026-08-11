@@ -64,7 +64,7 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
   <main id="main-content" class="app-layout pb-12" data-pagefind-body>
     <h1
       transition:name={slugifyStr(title.replaceAll(".", "-"))}
-      class="inline-block text-3xl font-medium tracking-tight text-accent sm:text-4xl"
+      class="inline-block text-2xl font-semibold tracking-tight text-accent"
     >
       {title}
     </h1>
@@ -78,14 +78,14 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
     {
       TranslationContent && (
         <div
-          class="sticky top-2 z-10 mt-8 flex w-full max-w-app border-y border-border bg-background/90 py-2 text-sm backdrop-blur-sm"
+          class="sticky top-(--header-h) z-10 mt-6 flex w-fit items-center glass-panel py-1.5 pe-3"
           role="group"
           aria-label="Prompt language"
           data-prompt-variant-group={promptVariantGroupId}
         >
           <button
             type="button"
-            class="relative px-0 py-1 meta-label text-xs text-foreground transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:bg-accent after:opacity-0 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent aria-pressed:after:opacity-100"
+            class="relative px-0 py-1 meta-label text-foreground decoration-foreground/35 decoration-dashed underline-offset-4 transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:bg-accent after:opacity-0 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent aria-pressed:no-underline aria-pressed:after:opacity-100"
             aria-pressed="true"
             data-prompt-variant-trigger="original"
           >
@@ -96,7 +96,7 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
           </span>
           <button
             type="button"
-            class="relative px-0 py-1 meta-label text-xs text-foreground transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:bg-accent after:opacity-0 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent aria-pressed:after:opacity-100"
+            class="relative px-0 py-1 meta-label text-foreground decoration-foreground/35 decoration-dashed underline-offset-4 transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:bg-accent after:opacity-0 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent aria-pressed:no-underline aria-pressed:after:opacity-100"
             aria-pressed="false"
             data-prompt-variant-trigger="translation"
           >
@@ -108,8 +108,8 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
     <article
       id="article"
       class:list={[
-        "app-prose w-full max-w-app prose-pre:bg-(--shiki-light-bg)",
-        TranslationContent ? "mt-6" : "mt-8",
+        "app-prose w-full max-w-app",
+        TranslationContent ? "mt-4" : "mt-6",
       ]}
       data-prompt-current={promptVariantGroupId}
       data-prompt-active-variant="original"
@@ -137,9 +137,9 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
 
     {
       tags.length > 0 && (
-        <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
+        <ul class="my-6 flex flex-wrap gap-x-4 gap-y-2">
           {tags.map(tag => (
-            <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />
+            <Tag tag={slugifyStr(tag)} tagName={tag} />
           ))}
         </ul>
       )

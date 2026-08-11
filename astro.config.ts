@@ -26,7 +26,7 @@ export default defineConfig({
     }),
     shikiConfig: {
       // For more themes, visit https://shiki.style/themes
-      themes: { light: "vesper", dark: "vesper" },
+      themes: { light: "min-light", dark: "min-light" },
       defaultColor: false,
       wrap: false,
       transformers: [

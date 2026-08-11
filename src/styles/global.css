@@ -7,9 +7,7 @@
   --accent: #171717;
   --muted: #f5f5f5;
   --border: #ebebeb;
-  /* Dark terminal surface for code blocks (matches the vesper Shiki theme) */
-  --terminal: #101010;
-  --terminal-border: #282828;
+  --header-h: 3.5rem;
 }
 
 @theme inline {
@@ -29,8 +27,6 @@
   --color-accent: var(--accent);
   --color-muted: var(--muted);
   --color-border: var(--border);
-  --color-terminal: var(--terminal);
-  --color-terminal-border: var(--terminal-border);
 }
 
 @layer base {
@@ -63,17 +59,23 @@
   @apply mx-auto w-full max-w-app px-4;
 }
 
-/* Technical voice: small uppercase mono labels for metadata */
+/* Technical voice: small uppercase mono labels for metadata.
+   One size for every label: 11px / 0.10em / regular weight. */
 @utility meta-label {
-  @apply font-mono tracking-[0.08em] uppercase;
+  @apply font-mono text-[0.6875rem] leading-4 font-normal tracking-[0.1em] uppercase;
+}
+
+/* Frosted-glass material shared by floating chrome (header, toolbars) */
+@utility glass-panel {
+  @apply bg-background/75 backdrop-blur-md;
 }
 
 .active-nav {
-  @apply underline decoration-foreground decoration-2 underline-offset-8;
+  @apply underline decoration-foreground decoration-2 underline-offset-4;
 }
 
 /* Source: https://piccalil.li/blog/a-more-modern-css-reset/ */
 /* Anything that has been anchored to should have extra scroll margin */
 :target {
-  scroll-margin-block: 1rem;
+  scroll-margin-block: calc(var(--header-h) + 1rem);
 }

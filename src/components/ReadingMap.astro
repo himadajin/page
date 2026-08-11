@@ -58,8 +58,8 @@ const shouldShowReadingMap = sections.length >= 2;
     overflow-y: auto;
     padding-inline-start: 0.75rem;
     border-inline-start: 1px solid var(--border);
-    background: color-mix(in srgb, var(--background) 92%, transparent);
-    backdrop-filter: blur(10px);
+    background: color-mix(in srgb, var(--background) 75%, transparent);
+    backdrop-filter: blur(12px);
     scrollbar-width: thin;
   }
 
@@ -70,9 +70,10 @@ const shouldShowReadingMap = sections.length >= 2;
   .reading-map__eyebrow {
     margin: 0;
     color: color-mix(in srgb, var(--foreground) 48%, transparent);
+    font-family: var(--font-mono);
     font-size: 0.6875rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
+    font-weight: 400;
+    letter-spacing: 0.1em;
     line-height: 1.2;
     text-transform: uppercase;
   }
@@ -83,7 +84,7 @@ const shouldShowReadingMap = sections.length >= 2;
     overflow: hidden;
     color: var(--foreground);
     font-size: 0.75rem;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.4;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -155,6 +156,14 @@ const shouldShowReadingMap = sections.length >= 2;
   .reading-map__link:hover,
   .reading-map__child-link:hover {
     color: var(--accent);
+    text-decoration-line: underline;
+    text-decoration-style: dashed;
+    text-decoration-color: color-mix(
+      in srgb,
+      var(--foreground) 35%,
+      transparent
+    );
+    text-underline-offset: 4px;
   }
 
   .reading-map__item.is-active::before {
@@ -163,7 +172,7 @@ const shouldShowReadingMap = sections.length >= 2;
 
   .reading-map__item.is-active > .reading-map__link {
     color: var(--foreground);
-    font-weight: 700;
+    font-weight: 600;
   }
 
   .reading-map__item.is-active > .reading-map__children {
