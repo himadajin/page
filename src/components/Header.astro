@@ -45,10 +45,15 @@ const navLinks = [
 
 <header
   id="site-header"
-  class="glass-panel sticky top-0 z-50 border-b border-transparent transition-[border-color] duration-200 data-scrolled:border-border"
+  class="sticky top-0 z-50 border-b border-transparent glass-panel transition-[border-color] duration-200 data-scrolled:border-border"
 >
-  <div class="app-layout flex h-(--header-h) items-center justify-between gap-2">
-    <a href="/" class="text-base font-semibold tracking-tight whitespace-nowrap">
+  <div
+    class="app-layout flex h-(--header-h) items-center justify-between gap-2"
+  >
+    <a
+      href="/"
+      class="text-base font-semibold tracking-tight whitespace-nowrap"
+    >
       {SITE.title}
     </a>
     <nav
@@ -227,7 +232,11 @@ const navLinks = [
     color: var(--accent);
     text-decoration-line: underline;
     text-decoration-style: dashed;
-    text-decoration-color: color-mix(in srgb, var(--foreground) 35%, transparent);
+    text-decoration-color: color-mix(
+      in srgb,
+      var(--foreground) 35%,
+      transparent
+    );
     text-underline-offset: 4px;
   }
 </style>
