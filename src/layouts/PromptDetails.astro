@@ -64,7 +64,7 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
   <main id="main-content" class="app-layout pb-12" data-pagefind-body>
     <h1
       transition:name={slugifyStr(title.replaceAll(".", "-"))}
-      class="inline-block text-2xl font-bold text-accent sm:text-3xl"
+      class="inline-block text-3xl font-medium tracking-tight text-accent sm:text-4xl"
     >
       {title}
     </h1>
@@ -85,7 +85,7 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
         >
           <button
             type="button"
-            class="relative px-0 py-1 text-foreground transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:bg-accent after:opacity-0 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent focus-visible:outline-dashed aria-pressed:after:opacity-100"
+            class="relative px-0 py-1 meta-label text-xs text-foreground transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:bg-accent after:opacity-0 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent aria-pressed:after:opacity-100"
             aria-pressed="true"
             data-prompt-variant-trigger="original"
           >
@@ -96,7 +96,7 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
           </span>
           <button
             type="button"
-            class="relative px-0 py-1 text-foreground transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:bg-accent after:opacity-0 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent focus-visible:outline-dashed aria-pressed:after:opacity-100"
+            class="relative px-0 py-1 meta-label text-xs text-foreground transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:bg-accent after:opacity-0 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent aria-pressed:after:opacity-100"
             aria-pressed="false"
             data-prompt-variant-trigger="translation"
           >
@@ -133,7 +133,7 @@ const promptVariantGroupId = `prompt-variant-${entry.id.replaceAll("/", "-")}`;
       )
     }
 
-    <hr class="my-8 border-dashed" />
+    <hr class="my-8" />
 
     {
       tags.length > 0 && (

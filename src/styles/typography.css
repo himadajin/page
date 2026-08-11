@@ -16,15 +16,15 @@
     }
 
     h1 {
-      @apply text-[2rem];
+      @apply text-[2rem] tracking-tight;
     }
 
     h2 {
-      @apply text-[1.5rem];
+      @apply mt-10 text-[1.5rem] tracking-tight;
     }
 
     h3 {
-      @apply text-[1.25rem];
+      @apply mt-8 text-[1.25rem] tracking-tight;
     }
 
     h4 {
@@ -109,11 +109,11 @@
     }
 
     summary {
-      @apply focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent focus-visible:outline-dashed;
+      @apply focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent;
     }
 
     pre {
-      @apply focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed;
+      @apply focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-accent;
     }
   }
 
@@ -173,15 +173,23 @@
 
   /* ===== Code Blocks & Syntax Highlighting ===== */
   .astro-code {
-    @apply block border bg-(--shiki-light-bg) text-(--shiki-light) outline-border [&_span]:text-(--shiki-light);
+    @apply block border border-terminal-border bg-(--shiki-light-bg) text-(--shiki-light) outline-terminal-border [&_span]:text-(--shiki-light);
   }
 
   .code-block-wrapper {
-    @apply my-6 max-w-full min-w-0 overflow-hidden rounded-md border border-border bg-background shadow-[0_1px_2px_rgba(40,39,40,0.035)];
+    @apply my-6 max-w-full min-w-0 overflow-hidden rounded-md border border-terminal-border bg-terminal;
   }
 
   .code-block-wrapper .astro-code {
     @apply m-0 max-w-full min-w-0 overflow-x-auto overflow-y-hidden rounded-none border-0;
+    scrollbar-color: #3a3a3a transparent;
+  }
+
+  /* Polarity-flipped selection inside dark terminal blocks */
+  .code-block-wrapper ::selection,
+  .astro-code ::selection {
+    background: #f5f5f5;
+    color: var(--terminal);
   }
 
   .code-block-wrapper[data-language="md"] .astro-code,
@@ -192,25 +200,25 @@
   }
 
   .code-block-header {
-    @apply flex min-h-7 items-center justify-between gap-3 border-b border-border bg-muted/45 px-3 py-0.5;
+    @apply flex min-h-7 items-center justify-between gap-3 border-b border-terminal-border bg-white/3 px-3 py-0.5;
   }
 
   .code-block-language {
-    @apply truncate text-[0.6875rem] leading-4 font-medium tracking-normal text-foreground/55;
+    @apply truncate meta-label text-[0.6875rem] leading-4 font-medium text-white/45;
   }
 
   .copy-code {
-    @apply grid size-6 shrink-0 place-items-center rounded border border-border bg-background/80 text-foreground/60;
-    @apply hover:bg-muted hover:text-foreground;
-    @apply focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent focus-visible:outline-dashed;
+    @apply grid size-6 shrink-0 place-items-center rounded border border-white/15 bg-white/5 text-white/55;
+    @apply hover:bg-white/10 hover:text-white;
+    @apply focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-white;
   }
 
   .copy-code[data-state="copied"] {
-    @apply border-foreground/20 bg-muted text-foreground/75;
+    @apply border-white/30 bg-white/10 text-white/85;
   }
 
   .copy-code[data-state="failed"] {
-    @apply border-foreground/30 bg-muted text-foreground;
+    @apply border-white/45 bg-white/10 text-white;
   }
 
   /* Styles for Shiki transformers */
@@ -226,7 +234,7 @@
       @apply inline-block w-full bg-slate-400/20;
     }
     .highlighted-word {
-      @apply rounded-sm border border-border px-0.5 py-px;
+      @apply rounded-sm border border-white/25 px-0.5 py-px;
     }
   }
 }
