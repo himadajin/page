@@ -2,125 +2,121 @@ import satori from "satori";
 import { SITE } from "@/config";
 import loadGoogleFonts from "../loadGoogleFont";
 
+// Terminal surface tokens shared with the site's code block design
+const TERMINAL = "#101010";
+const TERMINAL_BORDER = "#282828";
+const MUTE = "#7d8187";
+const CURSOR = "#ffc799";
+
 export default async reference => {
+  const title = reference.data.title;
+  const sectionLabel =
+    `${SITE.title} / ${reference.collection ?? ""}`.toUpperCase();
+  const site = new URL(SITE.website);
+  const footerLeft = `${site.hostname}${site.pathname.replace(/\/$/, "")}`;
+  const footerRight = SITE.author;
+
   return satori(
     {
       type: "div",
       props: {
         style: {
-          background: "#fefbfb",
+          display: "flex",
           width: "100%",
           height: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          background: TERMINAL,
+          padding: "40px",
         },
         children: [
           {
             type: "div",
             props: {
               style: {
-                position: "absolute",
-                top: "-1px",
-                right: "-1px",
-                border: "4px solid #000",
-                background: "#ecebeb",
-                opacity: "0.9",
-                borderRadius: "4px",
                 display: "flex",
-                justifyContent: "center",
-                margin: "2.5rem",
-                width: "88%",
-                height: "80%",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                flexGrow: 1,
+                border: `1px solid ${TERMINAL_BORDER}`,
+                padding: "52px 60px",
               },
-            },
-          },
-          {
-            type: "div",
-            props: {
-              style: {
-                border: "4px solid #000",
-                background: "#fefbfb",
-                borderRadius: "4px",
-                display: "flex",
-                justifyContent: "center",
-                margin: "2rem",
-                width: "88%",
-                height: "80%",
-              },
-              children: {
-                type: "div",
-                props: {
-                  style: {
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    margin: "20px",
-                    width: "90%",
-                    height: "90%",
+              children: [
+                {
+                  type: "div",
+                  props: {
+                    style: {
+                      display: "flex",
+                      fontFamily: "Geist Mono",
+                      fontSize: 26,
+                      letterSpacing: "2px",
+                      color: MUTE,
+                    },
+                    children: sectionLabel,
                   },
-                  children: [
-                    {
-                      type: "p",
-                      props: {
-                        style: {
-                          fontSize: 72,
-                          fontWeight: "bold",
-                          maxHeight: "84%",
-                          overflow: "hidden",
-                        },
-                        children: reference.data.title,
-                      },
-                    },
-                    {
-                      type: "div",
-                      props: {
-                        style: {
-                          display: "flex",
-                          justifyContent: "space-between",
-                          width: "100%",
-                          marginBottom: "8px",
-                          fontSize: 28,
-                        },
-                        children: [
-                          {
-                            type: "span",
-                            props: {
-                              children: [
-                                "by ",
-                                {
-                                  type: "span",
-                                  props: {
-                                    style: { color: "transparent" },
-                                    children: '"',
-                                  },
-                                },
-                                {
-                                  type: "span",
-                                  props: {
-                                    style: {
-                                      overflow: "hidden",
-                                      fontWeight: "bold",
-                                    },
-                                    children: SITE.author,
-                                  },
-                                },
-                              ],
-                            },
-                          },
-                          {
-                            type: "span",
-                            props: {
-                              style: { overflow: "hidden", fontWeight: "bold" },
-                              children: SITE.title,
-                            },
-                          },
-                        ],
-                      },
-                    },
-                  ],
                 },
-              },
+                {
+                  type: "div",
+                  props: {
+                    style: {
+                      display: "flex",
+                      alignItems: "flex-end",
+                      maxHeight: "330px",
+                      overflow: "hidden",
+                    },
+                    children: [
+                      {
+                        type: "div",
+                        props: {
+                          style: {
+                            display: "flex",
+                            fontFamily: "Geist",
+                            fontWeight: 500,
+                            fontSize: 72,
+                            lineHeight: 1.15,
+                            letterSpacing: "-1.5px",
+                            color: "#ffffff",
+                          },
+                          children: title,
+                        },
+                      },
+                      {
+                        type: "div",
+                        props: {
+                          style: {
+                            display: "flex",
+                            width: "22px",
+                            height: "54px",
+                            marginLeft: "18px",
+                            marginBottom: "14px",
+                            background: CURSOR,
+                          },
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  type: "div",
+                  props: {
+                    style: {
+                      display: "flex",
+                      justifyContent: "space-between",
+                      fontFamily: "Geist Mono",
+                      fontSize: 24,
+                      color: MUTE,
+                    },
+                    children: [
+                      {
+                        type: "span",
+                        props: { children: footerLeft },
+                      },
+                      {
+                        type: "span",
+                        props: { children: footerRight },
+                      },
+                    ],
+                  },
+                },
+              ],
             },
           },
         ],
@@ -131,7 +127,7 @@ export default async reference => {
       height: 630,
       embedFont: true,
       fonts: await loadGoogleFonts(
-        reference.data.title + SITE.author + SITE.title + "by"
+        title + sectionLabel + footerLeft + footerRight
       ),
     }
   );
