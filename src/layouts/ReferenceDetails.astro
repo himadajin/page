@@ -72,7 +72,7 @@ const layoutProps = {
       tags.length > 0 && (
         <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
           {tags.map(tag => (
-            <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />
+            <Tag tag={slugifyStr(tag)} tagName={tag} />
           ))}
         </ul>
       )

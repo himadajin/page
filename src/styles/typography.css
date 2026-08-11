@@ -197,7 +197,7 @@
   }
 
   .code-block-language {
-    @apply truncate meta-label text-[0.6875rem] leading-4 font-medium text-foreground/45;
+    @apply truncate meta-label text-foreground/45;
   }
 
   .copy-code {

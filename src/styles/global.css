@@ -58,9 +58,10 @@
   @apply mx-auto w-full max-w-app px-4;
 }
 
-/* Technical voice: small uppercase mono labels for metadata */
+/* Technical voice: small uppercase mono labels for metadata.
+   One size for every label: 11px / 0.10em / regular weight. */
 @utility meta-label {
-  @apply font-mono tracking-[0.08em] uppercase;
+  @apply font-mono text-[0.6875rem] leading-4 font-normal tracking-[0.1em] uppercase;
 }
 
 .active-nav {
