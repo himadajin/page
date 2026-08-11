@@ -2,7 +2,7 @@
 
 ## Development Environment
 
-- Node.js: `24.16`
+- Node.js: `24.19`
 - npm: `11`
 - Astro: `7.0.3`
 - Wrangler: `4.105.0`
