@@ -1,0 +1,173 @@
+<script is:inline data-astro-rerun>
+  (() => {
+    if (window.__promptVariantSwitcherBound) return;
+    window.__promptVariantSwitcherBound = true;
+
+    const swappingGroups = new WeakSet();
+    const headingSelector = "h1, h2, h3, h4, h5, h6";
+
+    function getArticleHeadings(article) {
+      return Array.from(article.querySelectorAll(headingSelector));
+    }
+
+    function getVisibleTop() {
+      return window.scrollY + Math.round(window.innerHeight * 0.22);
+    }
+
+    function getArticleProgress(article) {
+      const top = article.getBoundingClientRect().top + window.scrollY;
+      const height = Math.max(article.scrollHeight - window.innerHeight, 1);
+      return Math.min(Math.max((window.scrollY - top) / height, 0), 1);
+    }
+
+    function getScrollAnchor(article) {
+      const visibleTop = getVisibleTop();
+      const articleTop = article.getBoundingClientRect().top + window.scrollY;
+
+      if (window.scrollY < articleTop) {
+        return {
+          headingId: "",
+          headingIndex: -1,
+          offset: 0,
+          progress: 0,
+          pageScrollY: window.scrollY,
+        };
+      }
+
+      const headings = getArticleHeadings(article);
+      let headingIndex = -1;
+      let headingTop = 0;
+
+      headings.forEach((heading, index) => {
+        const top = heading.getBoundingClientRect().top + window.scrollY;
+        if (top <= visibleTop) {
+          headingIndex = index;
+          headingTop = top;
+        }
+      });
+
+      if (headingIndex >= 0) {
+        return {
+          headingId: headings[headingIndex]?.id ?? "",
+          headingIndex,
+          offset: visibleTop - headingTop,
+          progress: getArticleProgress(article),
+          pageScrollY: null,
+        };
+      }
+
+      return {
+        headingId: "",
+        headingIndex,
+        offset: visibleTop - articleTop,
+        progress: getArticleProgress(article),
+        pageScrollY: null,
+      };
+    }
+
+    function restoreScrollAnchor(article, anchor) {
+      if (anchor.pageScrollY !== null) {
+        window.scrollTo({ top: anchor.pageScrollY, behavior: "auto" });
+        return;
+      }
+
+      const headings = getArticleHeadings(article);
+      const targetHeading =
+        headings.find(heading => heading.id === anchor.headingId) ??
+        headings[anchor.headingIndex];
+
+      if (targetHeading) {
+        const targetTop =
+          targetHeading.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({
+          top: Math.max(
+            0,
+            targetTop + anchor.offset - Math.round(window.innerHeight * 0.22)
+          ),
+          behavior: "auto",
+        });
+        return;
+      }
+
+      const articleTop = article.getBoundingClientRect().top + window.scrollY;
+      const targetTop =
+        articleTop +
+        Math.max(article.scrollHeight - window.innerHeight, 1) *
+          anchor.progress;
+      window.scrollTo({ top: Math.max(0, targetTop), behavior: "auto" });
+    }
+
+    document.addEventListener("click", event => {
+      const eventTarget = event.target;
+      if (!(eventTarget instanceof Element)) return;
+
+      const trigger = eventTarget.closest("[data-prompt-variant-trigger]");
+      if (!trigger) return;
+
+      const group = trigger.closest("[data-prompt-variant-group]");
+      if (!group) return;
+      if (trigger.getAttribute("aria-pressed") === "true") return;
+      if (swappingGroups.has(group)) return;
+
+      const groupId = group.getAttribute("data-prompt-variant-group");
+      const variant = trigger.getAttribute("data-prompt-variant-trigger");
+      if (!groupId || !variant) return;
+
+      const article = document.querySelector(
+        `[data-prompt-current="${groupId}"]`
+      );
+      const targetTemplate = document.querySelector(
+        `template[data-prompt-template="${groupId}"][data-prompt-variant="${variant}"]`
+      );
+      if (
+        !(article instanceof HTMLElement) ||
+        !(targetTemplate instanceof HTMLTemplateElement)
+      ) {
+        return;
+      }
+
+      const activeVariant = article.dataset.promptActiveVariant;
+      if (!activeVariant || activeVariant === variant) return;
+
+      const activeTemplate = document.querySelector(
+        `template[data-prompt-template="${groupId}"][data-prompt-variant="${activeVariant}"]`
+      );
+      if (!(activeTemplate instanceof HTMLTemplateElement)) return;
+
+      group.querySelectorAll("[data-prompt-variant-trigger]").forEach(item => {
+        item.setAttribute("aria-pressed", String(item === trigger));
+      });
+
+      swappingGroups.add(group);
+
+      // Macrotask yield so aria-pressed can paint before moving thousands of nodes.
+      // rAF often runs in the same click frame, or never fires on very long pages.
+      window.setTimeout(() => {
+        try {
+          const anchor = getScrollAnchor(article);
+          const activeContent = Array.from(article.childNodes);
+          const targetContent = Array.from(targetTemplate.content.childNodes);
+
+          document.documentElement.style.overflowAnchor = "none";
+          activeTemplate.content.replaceChildren(...activeContent);
+          article.replaceChildren(...targetContent);
+          article.dataset.promptActiveVariant = variant;
+          restoreScrollAnchor(article, anchor);
+
+          window.setTimeout(() => {
+            restoreScrollAnchor(article, anchor);
+            document.documentElement.style.overflowAnchor = "";
+            swappingGroups.delete(group);
+
+            window.setTimeout(() => {
+              document.dispatchEvent(new CustomEvent("prompt:content-ready"));
+            }, 0);
+          }, 0);
+        } catch {
+          document.documentElement.style.overflowAnchor = "";
+          swappingGroups.delete(group);
+        }
+      }, 0);
+    });
+  })();
+</script>
