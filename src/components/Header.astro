@@ -48,34 +48,38 @@ const navLinks = [
   class="sticky top-0 z-50 border-b border-transparent glass-panel transition-[border-color] duration-200 data-scrolled:border-border"
 >
   <div
-    class="app-layout flex h-(--header-h) items-center justify-between gap-2"
+    class="app-layout flex h-(--header-h) flex-nowrap items-center justify-between gap-2"
   >
-    <a
-      href="/"
-      class="text-base font-semibold tracking-tight whitespace-nowrap"
-    >
-      {SITE.title}
-    </a>
-    <nav
-      id="nav-menu"
-      class="flex items-center gap-0.5 sm:gap-1"
-      aria-label="Site"
-    >
-      {
-        navLinks.map(link => (
-          <a
-            href={link.path}
-            class:list={[
-              "px-2 py-1.5 text-[0.8125rem] leading-none underline-offset-4 transition-colors duration-150",
-              link.active
-                ? "active-nav text-foreground"
-                : "text-foreground/70 decoration-foreground/35 decoration-dashed hover:text-foreground hover:underline",
-            ]}
-          >
-            {link.label}
-          </a>
-        ))
-      }
+    <div class="flex shrink-0 items-center">
+      <a
+        href="/"
+        class="shrink-0 text-base font-semibold tracking-tight whitespace-nowrap"
+      >
+        {SITE.title}
+      </a>
+      <nav
+        id="nav-menu"
+        class="ms-1 flex items-center gap-0.5 sm:ms-2 sm:gap-1"
+        aria-label="Site"
+      >
+        {
+          navLinks.map(link => (
+            <a
+              href={link.path}
+              class:list={[
+                "shrink-0 px-1 py-1.5 text-[0.8125rem] leading-none whitespace-nowrap underline-offset-4 transition-colors duration-150 sm:px-2",
+                link.active
+                  ? "active-nav text-foreground"
+                  : "text-foreground/70 decoration-foreground/35 decoration-dashed hover:text-foreground hover:underline",
+              ]}
+            >
+              {link.label}
+            </a>
+          ))
+        }
+      </nav>
+    </div>
+    <div class="flex shrink-0 items-center">
       <a
         href="/search"
         class:list={[
@@ -101,7 +105,7 @@ const navLinks = [
           </button>
         )
       }
-    </nav>
+    </div>
   </div>
 </header>
 
