@@ -1,12 +1,12 @@
 # Agent Instructions
 
-Astro 製の個人ページ。
-Cloudflare Workers (static assets) にデプロイされます。
+Personal page built with Astro.
+Deployed to Cloudflare Workers (static assets).
 
 ## Package Manager
 
-- **npm** を使用: `npm ci`
-- Node.js のバージョンは `.nvmrc` / `package.json` の `engines` に従う。
+- Use **npm**: `npm ci`
+- Follow the Node.js version in `.nvmrc` / `engines` in `package.json`.
 
 ## Commands
 
@@ -17,11 +17,11 @@ Cloudflare Workers (static assets) にデプロイされます。
 | Format check | `npm run format:check` |
 | Format write | `npm run format` |
 | Type check + build | `npm run build` |
-| Workers ローカル確認 | `npm run cf:preview` |
+| Workers local preview | `npm run cf:preview` |
 
-## 検証
+## Verification
 
-コードや設定を変更したら、CI と同じ次の 3 つを実行する。
+After changing code or config, run the same three checks as CI.
 
 ```bash
 npm run lint
@@ -29,7 +29,7 @@ npm run format:check
 npm run build
 ```
 
-依存関係や `Dockerfile` を変更した場合は、可能なら Docker build も確認する。
+If dependencies or the `Dockerfile` change, also verify the Docker build when possible.
 
 ```bash
 docker build -t terrestrial-transit:local .
@@ -37,9 +37,9 @@ docker build -t terrestrial-transit:local .
 
 ## Key Conventions
 
-- コンテンツは `src/data/`（`cmds`, `prompts`, `prompt-translations`）にあり、`src/content.config.ts` でスキーマ定義。
-- ページは `src/pages/`、共通スタイルは `src/styles/`。
-- コミットメッセージと PR タイトルは Conventional Commits（`cz.yaml` 参照）。
+- Content lives in `src/data/` (`cmds`, `prompts`, `prompt-translations`); schemas are defined in `src/content.config.ts`.
+- Pages are in `src/pages/`; shared styles in `src/styles/`.
+- Commit messages and PR titles follow Conventional Commits (see `cz.yaml`).
 
 ## External References
 
@@ -47,4 +47,4 @@ docker build -t terrestrial-transit:local .
 |------|------|
 | Setup / deploy | `README.md` |
 | CI | `.github/workflows/ci.yml` |
-| Workers 設定 | `wrangler.jsonc` |
+| Workers config | `wrangler.jsonc` |
