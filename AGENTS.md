@@ -1,50 +1,47 @@
 # Agent Instructions
 
-Personal page built with Astro.
-Deployed to Cloudflare Workers (static assets).
+## Toolchain
 
-## Package Manager
-
-- Use **npm**: `npm ci`
-- Follow the Node.js version in `.nvmrc` / `engines` in `package.json`.
+- Use npm and install with `npm ci`; do not create another package-manager lockfile.
+- Use the exact Node.js version in `.nvmrc`; `package.json#engines` defines the supported range.
 
 ## Commands
 
 | Task | Command |
 |------|---------|
-| Dev server | `npm run dev` |
-| Lint | `npm run lint` |
-| Format check | `npm run format:check` |
-| Format write | `npm run format` |
-| Type check + build | `npm run build` |
-| Workers local preview | `npm run cf:preview` |
+| Lint changed files | `npm exec eslint -- <paths>` |
+| Check changed-file formatting | `npm exec prettier -- --check <paths>` |
+| Format changed files | `npm exec prettier -- --write <paths>` |
+| Full lint | `npm run lint` |
+| Full format check | `npm run format:check` |
+| Type check and production build | `npm run build` |
 
 ## Verification
 
-After changing code or config, run the same three checks as CI.
+- After code, config, or content changes, run `npm run lint`, `npm run format:check`, and `npm run build`.
+- For documentation-only changes, run Prettier on the changed files.
+- After dependency or `Dockerfile` changes, also run `docker build -t terrestrial-transit:local .` when Docker is available.
 
-```bash
-npm run lint
-npm run format:check
-npm run build
-```
+## Content
 
-If dependencies or the `Dockerfile` change, also verify the Docker build when possible.
+- Collection schemas live in `src/content.config.ts`; content lives in `src/data/cmds/`, `src/data/prompts/`, and `src/data/prompt-translations/`.
+- Every prompt must have a translation with the same relative path and filename; the build fails when the matching translation ID is missing.
+- Add new command and prompt entries to the applicable `src/data/*/index.md`; collection pages do not generate those index links.
 
-```bash
-docker build -t terrestrial-transit:local .
-```
+## Generated Files
 
-## Key Conventions
+- `npm run build` regenerates `dist/` and `public/pagefind/`; both are ignored and must not be committed.
+- Keep `CLAUDE.md` as the `@AGENTS.md` entrypoint; do not duplicate instructions there.
 
-- Content lives in `src/data/` (`cmds`, `prompts`, `prompt-translations`); schemas are defined in `src/content.config.ts`.
-- Pages are in `src/pages/`; shared styles in `src/styles/`.
-- Commit messages and PR titles follow Conventional Commits (see `cz.yaml`).
+## Commits
 
-## External References
+- Use Conventional Commit subjects; `cz.yaml` contains the versioning convention.
+
+## References
 
 | Need | File |
 |------|------|
-| Setup / deploy | `README.md` |
-| CI | `.github/workflows/ci.yml` |
-| Workers config | `wrangler.jsonc` |
+| Local setup and deployment | `README.md` |
+| CI source of truth | `.github/workflows/ci.yml` |
+| Astro and Markdown behavior | `astro.config.ts` |
+| Cloudflare asset routing | `wrangler.jsonc` |
