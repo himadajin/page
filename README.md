@@ -1,62 +1,37 @@
 # page
 
-## Development Environment
+Personal reference site built with Astro and deployed as static assets on Cloudflare Workers.
 
-- Node.js: `24.19`
-- npm: `11`
-- Astro: `7.0.3`
-- Wrangler: `4.105.0`
+## Local development
 
-## Setup
+Use the Node.js version in `.nvmrc`, then install dependencies and start Astro:
 
 ```bash
 npm ci
-```
-
-## Commands
-
-```bash
 npm run dev
-npm run build
-npm run preview
-npm run cf:preview
-npm run cf:deploy
-npm run lint
-npm run format:check
-npm run format
-npm run sync
 ```
+
+Available scripts are defined in `package.json`.
 
 ## Cloudflare Workers
 
-This project is configured for Cloudflare Workers static assets deployment.
-
-Deployments are normally handled by Cloudflare Workers Builds via Git integration.
-The Cloudflare project is configured with:
+Production deployments normally run through Cloudflare Workers Builds using the `main` branch:
 
 - Build command: `npm run build`
 - Deploy command: `npx wrangler deploy`
 - Root directory: `/`
-- Production branch: `main`
 
-Use the following commands only for local preview or manual deployment.
-
-1. Authenticate once:
-
-```bash
-npm exec wrangler login
-```
-
-2. Preview the Cloudflare deployment locally:
+For a local Workers preview:
 
 ```bash
 npm run cf:preview
 ```
 
-3. Deploy to Cloudflare Workers:
+For a manual deployment, authenticate once and deploy:
 
 ```bash
+npm exec wrangler login
 npm run cf:deploy
 ```
 
-`wrangler.jsonc` uses `assets.directory: "./dist"` and `not_found_handling: "404-page"` so Astro's `src/pages/404.astro` is served as the custom 404 page on Workers.
+`wrangler.jsonc` serves `dist/` as static assets and uses `dist/404.html` as the custom not-found page.
