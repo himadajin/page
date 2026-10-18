@@ -41,6 +41,7 @@ description: コマンドラインオプションのメモ
 
 ### ファイル操作
 
+- [mklink](/cmds/mklink)
 - [tar](/cmds/tar)
 - [zip](/cmds/zip)
 
